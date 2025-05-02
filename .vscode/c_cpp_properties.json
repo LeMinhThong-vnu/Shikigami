@@ -4,11 +4,10 @@
             "name": "Win32",
             "includePath": [
                 "${default}",
-                "${workspaceFolder}/src/include/SDL2",
-                "${workspaceFolder}/src/include/json",
+                "${workspaceFolder}/src/**",
                 "${workspaceFolder}/src/include/tweeny",
-                "${workspaceFolder}/src",
-                "${workspaceFolder}/src/util"
+                "${workspaceFolder}/src/include/SDL2",
+                "${workspaceFolder}/src/components"
             ],
             "defines": [
                 "_DEBUG",

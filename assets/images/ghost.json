@@ -2,16 +2,27 @@
     "meta": {
         "w": 128,
         "h": 128,
-        "rows": 3,
-        "cols": 1
+        "rows": 2,
+        "cols": 2
     },
     "animations": {
         "idle": [
-            { "index": 0, "duration": 20 } ,
-            { "index": 1, "duration": 20 }
+            { "index": 0, "duration": 10 } ,
+            { "index": 2, "duration": 20 } ,
+            { "index": 0, "duration": 10 }
         ],
         "die": [
-            { "index": 2, "duration": 5 } ,
+            { "index": 1, "duration": 5 }
+        ],
+        "knockdown": [
+            { "index": 3, "duration": 5 }
+        ],
+        "grabbed": [
+            { "index": 1, "duration": 5 } ,
+            { "index": 1, "duration": 5 }
+        ],
+        "thrown": [
+            { "index": 1, "duration": 5 }
         ]
     }
 }

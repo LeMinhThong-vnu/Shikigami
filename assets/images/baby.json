@@ -1,0 +1,13 @@
+{
+    "meta": {
+        "w": 128,
+        "h": 128,
+        "rows": 3,
+        "cols": 1
+    },
+    "animations": {
+        "damage_0": [{ "index": 0, "duration": 5 }],
+        "damage_1": [{ "index": 1, "duration": 5 }],
+        "damage_2": [{ "index": 2, "duration": 5 }]
+    }
+}

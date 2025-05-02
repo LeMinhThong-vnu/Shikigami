@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "version": "0.6.7"
+  },
+  "savePath": "C:\\Users\\Abc\\Desktop\\Coding\\Sealmetry_v1.1\\assets\\images",
+  "images": [
+    {
+      "name": "miko_0001.png",
+      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/miko_0001.png",
+      "folder": ""
+    },
+    {
+      "name": "miko_0002.png",
+      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/miko_0002.png",
+      "folder": ""
+    },
+    {
+      "name": "miko_0003.png",
+      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/miko_0003.png",
+      "folder": ""
+    },
+    {
+      "name": "miko_0004.png",
+      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/miko_0004.png",
+      "folder": ""
+    },
+    {
+      "name": "miko_0005.png",
+      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/miko_0005.png",
+      "folder": ""
+    },
+    {
+      "name": "miko_0006.png",
+      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/miko_0006.png",
+      "folder": ""
+    },
+    {
+      "name": "miko_0007.png",
+      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/miko_0007.png",
+      "folder": ""
+    },
+    {
+      "name": "miko_0008.png",
+      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/miko_0008.png",
+      "folder": ""
+    }
+  ],
+  "folders": [],
+  "packOptions": {
+    "textureName": "miko",
+    "textureFormat": "png",
+    "removeFileExtension": false,
+    "prependFolderName": true,
+    "base64Export": false,
+    "tinify": false,
+    "tinifyKey": "",
+    "scale": 1,
+    "filter": "none",
+    "exporter": "JSON (array)",
+    "fileName": "pack-result",
+    "savePath": "C:\\Users\\Abc\\Desktop\\Coding\\Sealmetry_v1.1\\assets\\images",
+    "width": 2048,
+    "height": 2048,
+    "fixedSize": false,
+    "powerOfTwo": false,
+    "padding": 0,
+    "extrude": 0,
+    "allowRotation": false,
+    "allowTrim": false,
+    "trimMode": "trim",
+    "alphaThreshold": "0",
+    "detectIdentical": true,
+    "packer": "MaxRectsPacker",
+    "packerMethod": "Smart"
+  }
+}

@@ -1,0 +1,27 @@
+{
+    "meta": {
+        "w": 128,
+        "h": 128,
+        "rows": 3,
+        "cols": 1
+    },
+    "animations": {
+        "idle": [
+            { "index": 0, "duration": 20 }
+        ],
+        "attack": [
+            { "index": 2, "duration": 5 }
+        ],
+        "land": [
+            { "index": 1, "duration": 5 } ,
+            { "index": 1, "duration": 5 } ,
+            { "index": 1, "duration": 5 }
+        ],
+        "grabbed": [
+            { "index": 1, "duration": 5 }
+        ],
+        "thrown": [
+            { "index": 2, "duration": 5 }
+        ]
+    }
+}

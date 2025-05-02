@@ -32,6 +32,7 @@
 #include <tuple>
 #include <functional>
 #include <type_traits>
+#include <cstdint>
 
 namespace tweeny {
     template<typename T, typename... Ts> class tween;

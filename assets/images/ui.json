@@ -1,0 +1,12 @@
+{
+    "meta": {
+        "w": 128,
+        "h": 128,
+        "rows": 2,
+        "cols": 1
+    },
+    "animations": {
+        "spirit": [{ "index": 0, "duration": 5 }],
+        "shiki_icon_fox": [{ "index": 1, "duration": 5 }]
+    }
+}

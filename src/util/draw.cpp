@@ -34,7 +34,8 @@ SDL_Texture* loadNewTexture(const char* path)
 		SDL_FreeSurface( loadedSurface );
 	}
     std::printf("Loaded successfully: %s\n", _path.c_str());
-    return newTexture;
+    texture_assets.insert({ path, newTexture });
+	return newTexture;
 }
 
 void drawTexture(SDL_Texture* texture, double x, double y)
