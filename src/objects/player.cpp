@@ -1,14 +1,16 @@
 #include "player.h"
 #include "enemy.h"
 #include "fox.h"
+#include "jizo.h"
 #include "../global.h"
+#include "ui.h"
 #include <cmath>
 
 Player::Player(int _x, int _y, Game* _game): GameObject(100, 50, _x, _y, _game) {
     input = new InputComponent();
     sprite = new SpriteComponent();
     sprite->loadTexture("miko");
-    sprite->setAnim("idle");
+    sprite->setAnim("knockdown");
     type = PLAYER;
 }
 
@@ -47,6 +49,9 @@ void Player::update() {
             break;
         case PLR_STE_GRAB: case PLR_STE_THROW:
             update_grab();
+            break;
+        case PLR_STE_SUMMON:
+            update_summon();
             break;
     }
 
@@ -117,13 +122,65 @@ void Player::update_idle() {
     }
     
     // Summon input
-    if (input->isDown(K_SUMMON) && state != PLR_STE_GRAB && summon_delay == 0 && spirit_count > 0) {
+    if (input->isDown(K_SUMMON) && state != PLR_STE_GRAB && summon_delay == 0) {
+        state = PLR_STE_SUMMON;
+        sprite->setAnim("summon_pre");
         summon_delay = summon_delay_max;
-        Fox* shiki = new Fox(body->getX(), body->getY(), game);
-        obj_buffer.push_back(shiki);
-        summons.insert(shiki);
-        spirit_count--;
-        spirit_cooldown = spirit_cooldown_max;
+    }
+}
+
+void Player::update_summon() {
+    if (sprite->isComplete()) {
+        sprite->setAnim("summon");
+    }
+
+    if (input->isDown(K_LEFT) && summon_delay == 0) {
+        summon_index--;
+        summon_delay = summon_delay_max;
+        if (summon_index < 0) summon_index = summon_index_max;
+    }
+    if (input->isDown(K_RIGHT) && summon_delay == 0) {
+        summon_index++;
+        summon_delay = summon_delay_max;
+        if (summon_index > summon_index_max) summon_index = 0;
+    }
+
+    if (input->isDown(K_SUMMON) && state != PLR_STE_GRAB && summon_delay == 0) {
+        summon_delay = summon_delay_max;
+        bool pass = false;
+        switch (summon_index) {
+            case 0: {
+                if (spirit_count >= 1) {
+                    pass = true;
+                    Fox* shiki = new Fox(body->getX(), body->getY(), game);
+                    obj_buffer.push_back(shiki);
+                    summons.insert(shiki);
+                    grab_check(shiki);
+                    spirit_count -= 1;
+                }
+                break;
+            }
+            case 1: {
+                if (spirit_count >= 2) {
+                    pass = true;
+                    Jizo* shiki = new Jizo(body->getX(), body->getY(), game);
+                    obj_buffer.push_back(shiki);
+                    summons.insert(shiki);
+                    grab_check(shiki);
+                    spirit_count -= 2;
+                }
+                break;
+            }
+        }
+        if (pass) {
+            spirit_cooldown = spirit_cooldown_max;
+            sprite->setAnim("summon_post");
+        }
+        else {
+            TweenObject* tween = new TweenObject();
+            tween->add(0, 1, 50, IN);
+            game->get_ui()->tweens->add_tween("not_enough_spirit", tween);
+        }
     }
 }
 
@@ -194,7 +251,14 @@ void Player::update_grab() {
                     }
                     case (SHIKIGAMI): {
                         Shikigami* shk = dynamic_cast<Shikigami*>(grabbing);
-                        shk->thrown(_angle);
+                        switch (shk->get_shiki_type()) {
+                            case FOX:
+                                dynamic_cast<Fox*>(shk)->thrown(_angle);
+                                break;
+                            case JIZO:
+                                dynamic_cast<Jizo*>(shk)->thrown();
+                                break;
+                        }
                         break;
                     }
                     default: { break; }
@@ -211,17 +275,17 @@ void Player::update_grab() {
         }
     }
 
-    if (move_x != 0 || move_y != 0) {
-        if (state == PLR_STE_IDLE) {
-            state = PLR_STE_WALK;
-            sprite->setAnim("walk");
-            body->setTraction(TRC);
+    if (sprite->get_key() != "summon_post") {
+        if (move_x != 0 || move_y != 0) {
+            sprite->setAnim("walk", false);
+        }
+
+        if (move_x == 0 && move_y == 0) {
+            sprite->setAnim("idle", false);
         }
     }
-
-    if (state == PLR_STE_WALK && move_x == 0 && move_y == 0) {
-        state = PLR_STE_IDLE;
-        sprite->setAnim("walk");
+    else {
+        if (sprite->isComplete()) sprite->setAnim("idle");
     }
 
     if (move_x != 0 || move_y != 0) body->addVelocityAngle(move_speed / 2, _angle);

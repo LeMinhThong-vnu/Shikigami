@@ -9,15 +9,15 @@
 
 class UI {
     public:
+        friend class Game;
+        friend class Player;
+
         UI(Game* _game);
         ~UI();
 
         void update();
 
         void render();
-
-        GAME_STATES getState() { return state; }
-        void setState(GAME_STATES _state) { state = _state; }
 
     private:
 
@@ -33,14 +33,16 @@ class UI {
         void render_gameover();
         void update_gameover();
 
-        void render_settings();
-        void update_settings();
+        void render_title();
+        void update_title();
 
         SpriteComponent* sprite;
 
+        TweenComponent* tweens;
+
         Game* game;
 
-        GAME_STATES state = GME_STE_GAME;
+        SDL_Texture* txtr_text = nullptr;
 };
 
 #endif

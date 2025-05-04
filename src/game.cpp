@@ -9,8 +9,11 @@
 #include "./objects/baby.h"
 #include "./objects/ghost.h"
 #include "./objects/fox.h"
+#include "./objects/jizo.h"
 
 int Game::TICK = 0;
+int Game::HITSTOP = 0;
+int Game::SCREENSHAKE = 0;
 
 std::vector<GameObject*> Game::objects = {};
 
@@ -71,7 +74,15 @@ void Game::handleInput() {
             quit = true;
             break;
 
-        default:
+        case SDL_EventType::SDL_KEYDOWN:
+            if (state == GME_STE_TITLE) {
+                state = GME_STE_START;
+                player->getSprite()->setAnim("start");
+                TweenObject* tween = new TweenObject();
+                tween->add(0, 0, 100, TWEEN_TYPES::IN_OUT);
+                tween->add(0, 255, 100, TWEEN_TYPES::IN_OUT);
+                ui->tweens->add_tween("start", tween);
+            }
             break;
     }
     player->getInput()->handleInput(event);
@@ -135,9 +146,58 @@ void Game::addObject(GameObject* go) {
 void Game::update() {
     Game::TICK++;
 
+    Game::HITSTOP = std::max(Game::HITSTOP - 1, 0);
+    
+    Game::SCREENSHAKE = std::max(Game::SCREENSHAKE - 1, 0);
+
     // printf("Update start!\n");
 
-    apply_collision();
+    if (Game::HITSTOP == 0) {
+        apply_collision();
+        
+        switch (state) {
+            case GME_STE_GAME:
+                update_game();
+                break;
+            case GME_STE_TITLE:
+                update_title();
+                break;
+            case GME_STE_GAMEOVER:
+                update_gameover();
+                break;
+            case GME_STE_PAUSE:
+                update_pause();
+                break;
+            case GME_STE_START:
+                update_start();
+                break;
+        }
+    }
+            
+    // printf("Update End!\n");
+}
+
+void Game::update_start() {
+    player->getSprite()->update();
+    baby->update();
+    if (player->getSprite()->isComplete()) {
+        player->getSprite()->setAnim("idle");
+    }
+}
+
+void Game::update_gameover() {
+
+}
+
+void Game::update_pause() {
+
+}
+
+void Game::update_title() {
+    baby->update();
+}
+
+void Game::update_game() {
 
     for (GameObject* goi : Game::objects) {
         // std::cout << "Type: " << goi->getType() << std::endl;
@@ -169,13 +229,19 @@ void Game::update() {
         }
         goi->clearObjBuffer();
     }
-    
-    // printf("Update End!\n");
 }
 
 void Game::render() {
     // printf("Render Start!\n");
     SDL_RenderClear(renderer);
+    SDL_Texture* screen_tex;
+    SDL_Rect screen_pos = {
+        (SCREENSHAKE + (SCREENSHAKE != 0 ? rand() % 5 : 0)) * (TICK % 2 == 0 ? 1 : -1) ,
+        0,
+        WINDOW_WIDTH,
+        WINDOW_HEIGHT
+    };
+    SDL_SetRenderTarget(renderer, screen_tex);
 
     // Render
     SDL_Rect bg_pos = { 
@@ -184,6 +250,7 @@ void Game::render() {
         int(WINDOW_WIDTH + 50 + 50 * std::cos(Game::TICK * M_PI / 270)), 
         int(WINDOW_HEIGHT + 50 + 50 * std::sin(Game::TICK * M_PI / 270)) 
     };
+
     SDL_RenderCopy(renderer, background, NULL, &bg_pos);
 
     for (GameObject* goi : Game::objects) {
@@ -228,6 +295,8 @@ void Game::render() {
 
     ui->render();
 
+    SDL_RenderCopy(renderer, screen_tex, &screen_pos, NULL);
+
     SDL_RenderPresent(renderer);
     // printf("Render end...\n");
 }
@@ -259,6 +328,10 @@ void Game::updateShikigami(Shikigami* obj) {
             dynamic_cast<Fox*>(obj)->update();
             // printf("Update Fox End!\n");
             break;
+        case (SHIKIGAMI_TYPES::JIZO):
+            dynamic_cast<Jizo*>(obj)->update();
+            // printf("Update Fox End!\n");
+            break;
         default:
             // printf("update Shiki pass\n");
             break;
@@ -270,6 +343,10 @@ void Game::renderShikigami(Shikigami* obj) {
         case (SHIKIGAMI_TYPES::FOX):
             dynamic_cast<Fox*>(obj)->render();
             // printf("Render Fox End!\n");
+            break;
+        case (SHIKIGAMI_TYPES::JIZO):
+            dynamic_cast<Jizo*>(obj)->render();
+            // printf("Update Fox End!\n");
             break;
         default:
             // printf("render Shiki pass\n");

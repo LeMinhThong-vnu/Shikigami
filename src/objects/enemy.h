@@ -19,6 +19,8 @@ class Enemy : public GameObject {
 
         virtual void update_knockdown();
 
+        virtual void update_spawn();
+
         virtual void update_dead();
 
         virtual void update_attack();
@@ -33,7 +35,7 @@ class Enemy : public GameObject {
 
     protected:
         bool grabable = false;
-        ENEMY_STATES state = ENM_STE_IDLE;
+        ENEMY_STATES state = ENM_STE_SPAWN;
         ENEMY_TYPES enemy_type;
         int stun = 0;
         int hp = 100;

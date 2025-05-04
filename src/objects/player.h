@@ -25,6 +25,8 @@ class Player : public GameObject {
 
         void update_throw();
 
+        void update_summon();
+
         InputComponent* getInput() const { return input; };
 
     private:
@@ -49,8 +51,9 @@ class Player : public GameObject {
         int summon_delay_max = 30;
         int summon_max = 3;
         int summon_index = 0;
+        int summon_index_max = 1;
         int spirit_cooldown = 0;
-        int spirit_cooldown_max = 100;
+        int spirit_cooldown_max = 250;
         int spirit_count = 0;
         int spirit_count_max = 3;
         std::set<Shikigami*> summons = {};

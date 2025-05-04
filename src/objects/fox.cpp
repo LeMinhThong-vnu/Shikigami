@@ -99,6 +99,7 @@ void Fox::update_attack() {
             if (go->getState() == ENM_STE_IDLE || go->getState() == ENM_STE_ATTACK) {
                 go->add_damage(damage);
                 go->thrown(90 + facing * 90, -5);
+                // Game::set_hitstop(3);
             }
         }
     }

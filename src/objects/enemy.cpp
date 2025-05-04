@@ -7,6 +7,9 @@ Enemy::Enemy(int _x, int _y, ENEMY_TYPES _enemy_type, Game* _game) : GameObject(
     type = GAME_OBJECT_TYPES::ENEMY;
     is_enemy = true;
     grabbable = true;
+    TweenObject* tween = new TweenObject();
+    tween->add(1, 0, 100, IN_OUT);
+    tweens->add_tween("spawn", tween);
 }
 
 Enemy::~Enemy() {
@@ -38,6 +41,14 @@ void Enemy::thrown(double _angle, double _v) {
 
 void Enemy::update_attack() {
 
+}
+
+void Enemy::update_spawn() {
+    TweenObject* tween = tweens->get_tween("spawn");
+    sprite->setScale(1 - tween->value(), 1 + tween->value());
+    if (tween->isComplete()) {
+        state = ENM_STE_IDLE;
+    }
 }
 
 void Enemy::update_grabbed() {

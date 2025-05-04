@@ -14,6 +14,7 @@ enum ENEMY_TYPES {
 
 enum SHIKIGAMI_TYPES {
     FOX = 0,
+    JIZO = 1,
 };
 
 enum TWEEN_TYPES {
@@ -27,8 +28,9 @@ enum GAME_STATES {
     GME_STE_GAME     = 0,
     GME_STE_PAUSE    = 1,
     GME_STE_GAMEOVER = 2,
-    GME_STE_START    = 3,
-    GME_STE_SETTINGS = 4,
+    GME_STE_TITLE    = 3,
+    GME_STE_START    = 4,
+    GME_STE_TUTORIAL = 5,
 };
 
 enum SHIKIGAMI_STATES {
@@ -53,11 +55,12 @@ enum PLAYER_INPUT_KEYS {
 };
 
 enum PLAYER_STATES {
-    PLR_STE_IDLE  = 0,
-    PLR_STE_WALK  = 1,
-    PLR_STE_ROLL  = 2,
-    PLR_STE_GRAB  = 3,
-    PLR_STE_THROW = 4,
+    PLR_STE_IDLE   = 0,
+    PLR_STE_WALK   = 1,
+    PLR_STE_ROLL   = 2,
+    PLR_STE_GRAB   = 3,
+    PLR_STE_THROW  = 4,
+    PLR_STE_SUMMON = 5,
 };
 
 enum ENEMY_STATES {
@@ -68,14 +71,7 @@ enum ENEMY_STATES {
     ENM_STE_HIT         = 4,
     ENM_STE_DEAD        = 5,
     ENM_STE_ATTACK      = 6,
-};
-
-enum GAME_STATES {
-    GAME,
-    PAUSE,
-    GAMEOVER,
-    TITLE,
-    START,
+    ENM_STE_SPAWN       = 7,
 };
 
 #endif

@@ -22,5 +22,6 @@ class Ghost;
 // Shikigamis
 class Shikigami;
 class Fox;
+class Jizo;
 
 #endif

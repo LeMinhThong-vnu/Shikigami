@@ -74,6 +74,18 @@ class SpriteComponent {
             anim_length = (*animations)[anim_key].size();
             complete = false;
         }
+        
+        void setAnim(std::string key, bool repeat) {
+            if (repeat || anim_key != key) {
+                frame_cur = 0;
+                frame_sub = 0;
+                anim_key = key;
+                anim_length = (*animations)[anim_key].size();
+                complete = false;
+            }
+        }
+
+        std::string get_key() { return anim_key; }
 
         void update();
 

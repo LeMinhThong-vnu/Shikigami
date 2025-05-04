@@ -6,6 +6,18 @@
 
 std::map<std::string, SDL_Texture*> texture_assets = {};
 
+SDL_Texture* load_texture(const char* path) {
+	SDL_Texture* texture = NULL;
+	if (texture_assets.find(std::string(path)) != texture_assets.end()) {
+		printf("Loading from already loaded asset... %s\n", path);
+		texture = texture_assets.at(path);
+	}
+	else {
+		texture = loadNewTexture(path);
+	}
+	return texture;
+}
+
 SDL_Texture* loadNewTexture(const char* path)
 {
     //The final texture

@@ -56,7 +56,19 @@ class Game {
 
         Baby* get_baby();
 
+        UI* get_ui() { return ui; }
+
         void apply_collision();
+        
+        void update_game();
+
+        void update_title();
+
+        void update_pause();
+
+        void update_gameover();
+
+        void update_start();
 
         bool isQuit() { return quit; };
 
@@ -64,17 +76,26 @@ class Game {
 
         static int get_tick() { return Game::TICK; }
 
+        static void set_hitstop(int n) { Game::HITSTOP = n; }
+        
+        static void set_screenshake(int n) { Game::HITSTOP = n; }
+
+        GAME_STATES get_state() { return state; }
+
     private:
         static std::vector<GameObject*> objects;
         std::map<std::string, std::vector<GameObject*>> layers = {};
         Player* player = nullptr;
         Baby* baby = nullptr;
         static int TICK;
+        static int HITSTOP;
+        static int SCREENSHAKE;
         bool quit = false;
         SDL_Texture* shadow = nullptr;
         SDL_Texture* background = nullptr;
         std::vector<GameObject*> obj_buffer = {};
         UI* ui = nullptr;
+        GAME_STATES state = GAME_STATES::GME_STE_TITLE;
 };
 
 #endif

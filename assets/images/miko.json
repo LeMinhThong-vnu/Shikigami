@@ -3,26 +3,51 @@
         "w": 128,
         "h": 128,
         "rows": 3,
-        "cols": 3
+        "cols": 4
     },
     "animations": {
-        "idle": [{ "index": 0, "duration": 1 }],
+        "idle": [{ "index": 2, "duration": 1 }],
         "walk": [
-            { "index": 0, "duration": 6 }, 
+            { "index": 2, "duration": 6 }, 
             { "index": 3, "duration": 12 }, 
-            { "index": 0, "duration": 6 }
+            { "index": 2, "duration": 6 }
         ],
         "roll": [
-            { "index": 1, "duration": 3 } ,
+            { "index": 7, "duration": 2 } ,
+            { "index": 1, "duration": 2 } ,
             { "index": 4, "duration": 3 } ,
             { "index": 6, "duration": 3 } ,
-            { "index": 7, "duration": 6 } ,
-            { "index": 1, "duration": 3 } ,
+            { "index": 7, "duration": 3 } ,
+            { "index": 1, "duration": 6 }
         ],
         "summon_pre": [
-            { "index": 2, "duration": 3 } ,
+            { "index": 0, "duration": 3 } ,
             { "index": 5, "duration": 3 }
         ],
-        "summon": [{ "index": 5, "duration": 3 }]
+        "summon": [{ "index": 5, "duration": 3 }],
+        "summon_post": [
+            { "index": 5, "duration": 3 } ,
+            { "index": 0, "duration": 3 }
+        ],
+        "knockdown": [
+            { "index": 8, "duration": 8 }
+        ],
+        "start": [
+            { "index": 8, "duration": 7 } ,
+            { "index": 9, "duration": 7 } ,
+            { "index": 10, "duration": 7 } ,
+            { "index": 11, "duration": 7 } ,
+            { "index": 2, "duration": 7 } ,
+            { "index": 0, "duration": 7 } ,
+            { "index": 2, "duration": 7 }
+        ],
+        "gameover": [
+            { "index": 0, "duration": 6 } ,
+            { "index": 2, "duration": 6 } ,
+            { "index": 11, "duration": 6 } ,
+            { "index": 10, "duration": 6 } ,
+            { "index": 9, "duration": 6 } ,
+            { "index": 8, "duration": 6 }
+        ]
     }
 }

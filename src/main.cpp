@@ -1,6 +1,7 @@
 #include <vector>
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <cmath>
 #include <iostream>
 #include "global.h"
 #include "util/draw.h"
@@ -17,8 +18,8 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    game->setPlayer(new Player(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, game));
-    game->addObject(new Ghost(WINDOW_WIDTH * 1 / 5, WINDOW_HEIGHT * 1 / 5, game));
+    game->setPlayer(new Player(WINDOW_WIDTH/2, WINDOW_HEIGHT * 2 / 3, game));
+    // game->addObject(new Ghost(WINDOW_WIDTH * 1 / 5, WINDOW_HEIGHT * 1 / 5, game));
     // game->addObject(new Ghost(WINDOW_WIDTH * 4 / 5, WINDOW_HEIGHT * 4 / 5, game));
     // game->addObject(new Ghost(WINDOW_WIDTH * 1 / 5, WINDOW_HEIGHT * 4 / 5, game));
     // game->addObject(new Ghost(WINDOW_WIDTH * 4 / 5, WINDOW_HEIGHT * 1 / 5, game));
@@ -43,6 +44,17 @@ int main(int argc, char* argv[]) {
 
         // Clean Deleted Game Objects
         game->cleanObjects();
+
+        if (game->get_state() == GME_STE_GAME) {
+            if (Game::get_tick() % 400 == 0) {
+                double angle = (rand() % 360) * M_PI / 180;
+                game->addObject(new Ghost(
+                    (WINDOW_WIDTH / 2 - 100) * std::cos(angle) + (rand() % 100 - 50), 
+                    (WINDOW_HEIGHT / 2 - 50) * std::sin(angle) + (rand() % 100 - 50),
+                    game
+                ));
+            }
+        }
 
         // Add new Objects
         game->addObjectBuffer();

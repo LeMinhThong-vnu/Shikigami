@@ -8,6 +8,8 @@
 
 extern std::map<std::string, SDL_Texture*> texture_assets;
 
+SDL_Texture* load_texture(const char* filename);
+
 SDL_Texture* loadNewTexture(const char* filename);
 
 void drawTexture(SDL_Texture* texture, double x, double y);

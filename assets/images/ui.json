@@ -2,11 +2,14 @@
     "meta": {
         "w": 128,
         "h": 128,
-        "rows": 2,
+        "rows": 5,
         "cols": 1
     },
     "animations": {
         "spirit": [{ "index": 0, "duration": 5 }],
-        "shiki_icon_fox": [{ "index": 1, "duration": 5 }]
+        "arrow_right": [{ "index": 2, "duration": 5 }],
+        "arrow_left": [{ "index": 1, "duration": 5 }],
+        "shiki_icon_fox": [{ "index": 3, "duration": 5 }],
+        "shiki_icon_jizo": [{ "index": 4, "duration": 5 }]
     }
 }

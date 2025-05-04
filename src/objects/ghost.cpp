@@ -41,6 +41,9 @@ void Ghost::update() {
         case ENM_STE_ATTACK:
             update_attack();
             break;
+        case ENM_STE_SPAWN:
+            update_spawn();
+            break;
     }
 
     GameObject::update();

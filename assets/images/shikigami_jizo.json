@@ -1,0 +1,14 @@
+{
+    "meta": {
+        "w": 128,
+        "h": 128,
+        "rows": 2,
+        "cols": 1
+    },
+    "animations": {
+        "idle": [{ "index": 0, "duration": 5 }],
+        "grabbed": [{ "index": 0, "duration": 5 }],
+        "thrown": [{ "index": 0, "duration": 5 }],
+        "attack": [{ "index": 1, "duration": 5 }]
+    }
+}
