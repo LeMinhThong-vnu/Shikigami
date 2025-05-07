@@ -12,7 +12,7 @@ Fox::Fox(int _x, int _y, Game* _game) : Shikigami(_x, _y, SHIKIGAMI_TYPES::FOX, 
 }
 
 Fox::~Fox() {
-    // Shikigami::~Shikigami();
+    
 }
 
 void Fox::update() {
@@ -30,7 +30,6 @@ void Fox::update() {
             update_attack();
             break;
         case (SHK_STE_THROWN):
-            // update_thrown();
             update_attack();
             break;
         case (SHK_STE_GRABBED):
@@ -55,7 +54,6 @@ void Fox::update_idle() {
 
     if (cooldown == 0) {
         for (DistanceBetween dist_btwn : body->getDistances()) {
-            // std::cout << dist_btwn.distance << std::endl;
             GameObject* go = dist_btwn.body->getOwner();
             if (go->getType() == GAME_OBJECT_TYPES::ENEMY) {
                 target = dynamic_cast<Enemy*>(go);
@@ -84,7 +82,6 @@ void Fox::attack() {
     AngleBetween angl_btwn = body->angleFrom(target->getBody());
     _angle = angl_btwn.angle + (rand() % 10 - 5);
     _v = body->getDistance(target->getBody()) / 20;
-    // std::cout << "angle: " << _angle << std::endl;
     facing = ((_angle > 90 && _angle < 270) ? -1 : 1);
     body->setVelocityAngle(_v, _angle);
     body->setVelocityZ(-7);
@@ -101,7 +98,6 @@ void Fox::update_attack() {
             if (go->getState() == ENM_STE_IDLE || go->getState() == ENM_STE_ATTACK) {
                 go->add_damage(damage);
                 go->thrown(90 + facing * 90, -5);
-                // Game::set_hitstop(3);
             }
         }
     }

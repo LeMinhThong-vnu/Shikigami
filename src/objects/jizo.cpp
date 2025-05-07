@@ -15,7 +15,7 @@ Jizo::Jizo(int _x, int _y, Game* _game) : Shikigami(_x, _y, SHIKIGAMI_TYPES::JIZ
 }
 
 Jizo::~Jizo() {
-    // Shikigami::~Shikigami();
+    
 }
 
 void Jizo::thrown(double _angle) {
@@ -40,7 +40,6 @@ void Jizo::update() {
             update_attack();
             break;
         case (SHK_STE_THROWN):
-            // update_thrown();
             update_attack();
             break;
         case (SHK_STE_GRABBED):
@@ -80,7 +79,6 @@ void Jizo::update_wait() {
 void Jizo::attack() {
 
     for (DistanceBetween dist_btwn : body->getDistances()) {
-        // std::cout << dist_btwn.distance << std::endl;
         GameObject* go = dist_btwn.body->getOwner();
         if (go->getType() == GAME_OBJECT_TYPES::ENEMY) {
             target = dynamic_cast<Enemy*>(go);
@@ -100,7 +98,6 @@ void Jizo::attack() {
     tween_scale->add(-0.1, -0.5, 10, OUT, "attack");
     tween_scale->add(-0.5, 0, 30, IN_OUT);
     tweens->add_tween("scale", tween_scale);
-    // body->setActive(false);
     body->setApplyingCollision(false);
 }
 
@@ -133,7 +130,6 @@ void Jizo::update_attack() {
 
     if (tween_scale->get_flag() == "attack") {
         for (DistanceBetween dist_btwn : body->getDistances()) {
-            // std::cout << dist_btwn.distance << std::endl;
             GameObject* go = dist_btwn.body->getOwner();
             if (go->getType() == GAME_OBJECT_TYPES::ENEMY && dist_btwn.distance <= 225) {
                 target = dynamic_cast<Enemy*>(go);

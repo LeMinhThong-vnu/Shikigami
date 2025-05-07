@@ -9,17 +9,14 @@ Ghost::Ghost(int _x, int _y, Game* _game) : Enemy(_x, _y, ENEMY_TYPES::GHOST, _g
 }
 
 Ghost::~Ghost() {
-    // GameObject::~GameObject();
+
 }
 
 void Ghost::update() {
-    // Update sprite
     sprite->update();
 
-    // Tween update
     tweens->update();
     
-    // Decreasing cooldowns
     stun = std::max(stun - 1, 0);
 
     switch (state) {

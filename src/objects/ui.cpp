@@ -83,7 +83,6 @@ void UI::print_text(std::string key, int x, int y) {
     clip.y = frame.y;
     SDL_SetTextureAlphaMod(text_texture, 255);
     SDL_RenderCopyEx(renderer, text_texture, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
-    // printf("%s: {\n\tx: %d,\n\ty: %d,\n\tw: %d,\n\th: %d,\n}\n", key.c_str(), frame.x, frame.y, frame.w, frame.h);
 }
 
 void UI::print_text(std::string key, int x, int y, double sx, double sy) {
@@ -99,7 +98,6 @@ void UI::print_text(std::string key, int x, int y, double sx, double sy) {
     clip.y = frame.y;
     SDL_SetTextureAlphaMod(text_texture, 255);
     SDL_RenderCopyEx(renderer, text_texture, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
-    // printf("%s: {\n\tx: %d,\n\ty: %d,\n\tw: %d,\n\th: %d,\n}\n", key.c_str(), frame.x, frame.y, frame.w, frame.h);
 }
 
 void UI::print_text(std::string key, int x, int y, double sx, double sy, double alpha) {
@@ -115,7 +113,6 @@ void UI::print_text(std::string key, int x, int y, double sx, double sy, double 
     clip.y = frame.y;
     SDL_SetTextureAlphaMod(text_texture, alpha);
     SDL_RenderCopyEx(renderer, text_texture, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
-    // printf("%s: {\n\tx: %d,\n\ty: %d,\n\tw: %d,\n\th: %d,\n}\n", key.c_str(), frame.x, frame.y, frame.w, frame.h);
 }
 
 void UI::print_text(std::string key, int x, int y, double sx, double sy, double alpha, double ox, double oy) {
@@ -131,7 +128,6 @@ void UI::print_text(std::string key, int x, int y, double sx, double sy, double 
     clip.y = frame.y;
     SDL_SetTextureAlphaMod(text_texture, alpha);
     SDL_RenderCopyEx(renderer, text_texture, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
-    // printf("%s: {\n\tx: %d,\n\ty: %d,\n\tw: %d,\n\th: %d,\n}\n", key.c_str(), frame.x, frame.y, frame.w, frame.h);
 }
 
 void UI::render_tutorial() {
@@ -172,7 +168,6 @@ void UI::render_start() {
         game->state = GME_STE_GAME;
     }
 
-    // "Protect the Dreaming Child"
     print_text("protect_the_child", WINDOW_WIDTH / 2, 300, 1 + tween->value() / 255, 1 - tween->value() / 255);
 }
 
@@ -186,7 +181,6 @@ void UI::render_game() {
     }
     else if (game->player->state != PLR_STE_SUMMON) base_alpha = 175;
 
-    // Spirits count
     start_x = 75 + 130;
     start_y = 75 + (86 / 3);
     offset_x = 50;
@@ -246,25 +240,21 @@ void UI::render_game() {
     }
 
     if (tweens->get_tween("not_enough_spirit") != nullptr) {
-        // "Press Start"
         TweenObject* tween = tweens->get_tween("not_enough_spirit");
         print_text("not_enough_spirit", WINDOW_WIDTH / 2, 300, 1 + tween->value() / 255, 1 - tween->value() / 255);
     }
 
     if (tweens->get_tween("protect_the_child") != nullptr) {
-        // "Press Start"
         TweenObject* tween = tweens->get_tween("protect_the_child");
         print_text("protect_the_child", WINDOW_WIDTH / 2, 300, 1 + tween->value(), 1 - tween->value());
     }
 
-    // Summons count
     start_x = 75 + 130;
     start_y = 75 + (86 * 2 / 3);
     sprite->setAlpha(base_alpha);
     ind = 0;
     sprite->setAngle(0);
     sprite->setScale(0.5, 0.5);
-    // sprite->setAlpha(255);
     for (Shikigami* shiki : game->player->summons) {
         switch (shiki->get_shiki_type()) {
             case FOX: {
@@ -291,10 +281,8 @@ void UI::render_pause() {
 void UI::render_title() {
     SDL_Rect pos, clip;
 
-    // Title
     print_text("shikigami", WINDOW_WIDTH / 2, 300);
     
-    // "Press Start"
     print_text("press_any_key_to_start", WINDOW_WIDTH / 2, 300 + 105);
     
 }

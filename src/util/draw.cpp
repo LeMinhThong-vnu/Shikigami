@@ -20,10 +20,8 @@ SDL_Texture* load_texture(const char* path) {
 
 SDL_Texture* loadNewTexture(const char* path)
 {
-    //The final texture
 	SDL_Texture* newTexture = NULL;
 
-	//Load image at specified path
 	std::string _path = ("assets/images/" + std::string(path) + ".png");
 	SDL_Surface* loadedSurface = IMG_Load( _path.c_str() );
 	if( loadedSurface == NULL )
@@ -32,17 +30,14 @@ SDL_Texture* loadNewTexture(const char* path)
 	}
 	else
 	{
-		//Color key image
 		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
 
-		//Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface( renderer, loadedSurface );
 		if( newTexture == NULL )
 		{
 			std::printf( "Unable to create texture from %s! SDL Error: %s\n", _path.c_str(), SDL_GetError() );
 		}
 
-		//Get rid of old loaded surface
 		SDL_FreeSurface( loadedSurface );
 	}
     std::printf("Loaded successfully: %s\n", _path.c_str());

@@ -1,8 +1,6 @@
 #include "global.h"
 #include <iostream>
 
-// std::vector<GameObject*> game_objects = {};
-
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 

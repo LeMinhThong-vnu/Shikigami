@@ -104,7 +104,6 @@ class Game {
         UI* ui = nullptr;
         GAME_STATES state = GAME_STATES::GME_STE_TITLE;
         
-        // Tutorial
         bool tutorial_summon_flag = false;
         bool tutorial_throw_flag = false;
         bool tutorial_recycle_flag = false;

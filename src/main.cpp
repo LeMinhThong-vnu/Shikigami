@@ -19,10 +19,6 @@ int main(int argc, char* argv[]) {
     }
 
     game->setPlayer(new Player(WINDOW_WIDTH/2, WINDOW_HEIGHT * 2 / 3, game));
-    // game->addObject(new Ghost(WINDOW_WIDTH * 1 / 5, WINDOW_HEIGHT * 1 / 5, game));
-    // game->addObject(new Ghost(WINDOW_WIDTH * 4 / 5, WINDOW_HEIGHT * 4 / 5, game));
-    // game->addObject(new Ghost(WINDOW_WIDTH * 1 / 5, WINDOW_HEIGHT * 4 / 5, game));
-    // game->addObject(new Ghost(WINDOW_WIDTH * 4 / 5, WINDOW_HEIGHT * 1 / 5, game));
     game->set_baby(new Baby(game));
 
     Uint32 frameStart;
@@ -33,16 +29,12 @@ int main(int argc, char* argv[]) {
 
         frameStart = SDL_GetTicks();
 
-        // Input
         game->handleInput();
         
-        // Update
         game->update();
 
-        // Render
         game->render();
 
-        // Clean Deleted Game Objects
         game->cleanObjects();
 
         if (game->get_state() == GME_STE_GAME) {
@@ -56,10 +48,8 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        // Add new Objects
         game->addObjectBuffer();
 
-        // Set FPS
         frameDelta = SDL_GetTicks() - frameStart;
 
         if (frameDelay > frameDelta) {
@@ -68,8 +58,6 @@ int main(int argc, char* argv[]) {
 
     }
     
-    // Destroy Window and Renderer after quit game
-    // game->clean();
     delete game;
 
     return 0;

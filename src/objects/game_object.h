@@ -49,19 +49,15 @@ class GameObject {
         GAME_OBJECT_TYPES type;
         Game* game = nullptr;
 
-        // Render
         bool static_depth = false;
 
-        // Componets;
         PhysicsComponent* body = nullptr;
         SpriteComponent* sprite = nullptr;
         TweenComponent* tweens = nullptr;
 
-        // Update vars
         int move_x, move_y = 0;
         int facing = 1;
 
-        // Misc
         bool remove = false;
         bool is_enemy = false;
         bool grabbable = false;

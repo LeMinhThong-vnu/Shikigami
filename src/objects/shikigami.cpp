@@ -9,16 +9,7 @@ Shikigami::Shikigami(int _x, int _y, SHIKIGAMI_TYPES _type, Game* _game) : GameO
 }
 
 Shikigami::~Shikigami() {
-    // for (int i = 0; i < player->getSummons().size(); i++) {
-    //     Shikigami* shiki = player->getSummons()[i];
-    //     std::cout << shiki << std::endl;
-    //     std::cout << this << std::endl << std::endl;
-    //     if (shiki == this) {
-    //         player->getSummons().erase(player->getSummons().begin() + i);
-    //     }
-    // }
     game->getPlayer()->summons.erase(this);
-    // GameObject::~GameObject();
 }
 
 void Shikigami::grabbed() {
@@ -73,7 +64,6 @@ void Shikigami::update_despawn() {
 }
 
 void Shikigami::update_grabbed() {
-    // printf("grabbed...\n");
     body->setPos(
         body->getX() + (game->getPlayer()->body->getX() - body->getX()) / 2,
         body->getY() + (game->getPlayer()->body->getY() - body->getY()) / 2,

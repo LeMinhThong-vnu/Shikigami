@@ -20,17 +20,13 @@ Player::~Player() {
 
 void Player::update() {
     
-    // Update sprite
     sprite->update();
 
-    // Tween update
     tweens->update();
 
-    // Set
     move_x = input->isDown(K_RIGHT) - input->isDown(K_LEFT);
     move_y = input->isDown(K_DOWN) - input->isDown(K_UP);
     
-    // Decreasing cooldowns
     roll_cooldown = std::max(roll_cooldown - 1, 0);
     grab_delay = std::max(grab_delay - 1, 0);
     summon_delay = std::max(summon_delay - 1, 0);
@@ -102,31 +98,23 @@ void Player::update_idle() {
         }
     }
     
-    // Grab input
     if (grab_delay == 0 && input->isDown(K_GRAB) && grabbing == nullptr) {
-        // printf("grab?\n");
         for (PhysicsComponent* _body : body->getColliding()) {
-            // printf("found body\n");
             if (_body->getOwner() != NULL) {
                 if (_body->getOwner()->is_grabbable()) {
-                    // printf("Type: %d\n", _body->getOwner()->getType());
                     if (grab_check(_body->getOwner())) { break; }
                 }
             }
         }
-        // printf("end...\n");
-        // printf("end grab\n");
         grab_delay = grab_delay_max;
     }
 
-    // Roll complete
     if (state == PLR_STE_ROLL && sprite->isComplete()) {
         state = PLR_STE_IDLE;
         sprite->setAnim("idle");
         body->setActive(true);
     }
     
-    // Summon input
     if (input->isDown(K_SUMMON) && state != PLR_STE_GRAB && summon_delay == 0) {
         state = PLR_STE_SUMMON;
         sprite->setAnim("summon_pre");
@@ -206,7 +194,6 @@ void Player::update_summon() {
 bool Player::grab_check(GameObject* obj) {
     switch (obj->getType()) {
         case (ENEMY): {
-            // printf("Is enemy\n");
             Enemy* enm = dynamic_cast<Enemy*>(obj);
             if (enm->getState() == ENM_STE_IDLE || enm->getState() == ENM_STE_ATTACK) {
                 enm->grabbed();
@@ -217,7 +204,6 @@ bool Player::grab_check(GameObject* obj) {
             break;
         }
         case (SHIKIGAMI): {
-            // printf("Is shiki\n");
             Shikigami* shk = dynamic_cast<Shikigami*>(obj);
             if (shk->get_state() == SHK_STE_IDLE) {
                 shk->grabbed();
@@ -233,7 +219,6 @@ bool Player::grab_check(GameObject* obj) {
 }
 
 void Player::update_grab() {
-    // printf("grab_state_start...\n");
     int _angle = 0;
     if (move_x == 0 && move_y == 0) _angle = 90 - facing * 90; 
     if (move_x != 0 && move_y == 0) _angle = 90 - move_x * 90;
@@ -242,7 +227,6 @@ void Player::update_grab() {
 
     if (state == PLR_STE_THROW) {
         float __angle = 0;
-        // printf("throw_state_start\n");
         TweenObject* tween = tweens->get_tween("throw");
         if (tween == nullptr) {
             TweenObject* _tween = new TweenObject();
@@ -253,12 +237,8 @@ void Player::update_grab() {
             tween = tweens->get_tween("throw");
         }
 
-        // printf("throw_state_1\n");
         if (!tween->isComplete()) {
-            // printf("throw_state_2\n");
             __angle = tween->value();
-            // std::cout << __angle << std::endl;
-            // __angle = (std::abs(__angle) / __angle) * std::min(std::abs(__angle), 30.0f);
             sprite->setAngle(__angle);
             sprite->setDifferenceX(__angle / 5);
             if (tween->get_flag() == "throw" && grabbing != nullptr) {
@@ -284,7 +264,6 @@ void Player::update_grab() {
                 }
                 grabbing = nullptr;
             }
-            // printf("throw_state_3\n");
         }
         else {
             sprite->setAngle(0);
@@ -321,20 +300,15 @@ void Player::update_grab() {
         }
     }
 
-    // Grab input
     if (grab_delay == 0 && input->isDown(K_GRAB) && state == PLR_STE_GRAB && grabbing != nullptr) {
         grab_delay = grab_delay_max;
         state = PLR_STE_THROW;
-        // printf("add_tween_start\n");
         TweenObject* tween = new TweenObject();
         tween->add(0, -30 * facing, 10, TWEEN_TYPES::IN_OUT, "");
         tween->add(-30 * facing, 30 * facing, 5, TWEEN_TYPES::IN, "");
         tween->add(30 * facing, 0, 10, TWEEN_TYPES::IN_OUT, "throw");
-        // printf("add_tween_end_1\n");
         tweens->add_tween("throw", tween);
-        // printf("add_tween_end_2\n");
     }
-    // printf("grab_state_end...\n");
 }
 
 void Player::update_throw() {

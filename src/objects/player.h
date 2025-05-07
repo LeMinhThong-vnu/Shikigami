@@ -34,20 +34,14 @@ class Player : public GameObject {
 
         bool grab_check(GameObject* obj);
 
-        // Components
         InputComponent* input;
-        // States
         PLAYER_STATES state = PLR_STE_IDLE;
-        // Movement
         double move_speed = 2.5;
-        // Roll
         int roll_cooldown = 0;
         int roll_cooldown_max = 20;
-        // Grab
         GameObject* grabbing = nullptr;
         int grab_delay = 0;
         int grab_delay_max = 10;
-        // Summon
         int summon_delay = 0;
         int summon_delay_max = 30;
         int summon_max = 3;
