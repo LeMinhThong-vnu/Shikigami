@@ -24,6 +24,7 @@ Game::Game() {
     layers.insert({ "go_1", {} });
     layers.insert({ "go_2", {} });
     layers.insert({ "go_3", {} });
+    tweens = new TweenComponent();
 }
 
 Game::~Game() {
@@ -76,12 +77,16 @@ void Game::handleInput() {
 
         case SDL_EventType::SDL_KEYDOWN:
             if (state == GME_STE_TITLE) {
-                state = GME_STE_START;
+                state = GME_STE_TUTORIAL;
                 player->getSprite()->setAnim("start");
+                player->summon_delay = 20;
                 TweenObject* tween = new TweenObject();
-                tween->add(0, 0, 100, TWEEN_TYPES::IN_OUT);
+                // tween->add(0, 0, 100, TWEEN_TYPES::IN_OUT);
                 tween->add(0, 255, 100, TWEEN_TYPES::IN_OUT);
                 ui->tweens->add_tween("start", tween);
+                tween = new TweenObject();
+                tween->add(255, 0, 100, TWEEN_TYPES::IN_OUT);
+                tweens->add_tween("bg_fade_black", tween);
             }
             break;
     }
@@ -150,6 +155,8 @@ void Game::update() {
     
     Game::SCREENSHAKE = std::max(Game::SCREENSHAKE - 1, 0);
 
+    tweens->update();
+
     // printf("Update start!\n");
 
     if (Game::HITSTOP == 0) {
@@ -171,10 +178,43 @@ void Game::update() {
             case GME_STE_START:
                 update_start();
                 break;
+            case GME_STE_TUTORIAL:
+                update_tutorial();
+                break;
         }
     }
             
     // printf("Update End!\n");
+}
+
+void Game::update_tutorial() {
+    
+    if (player->grabbing != nullptr) { 
+        if (tutorial_throw_flag) printf("throw_flag\n");
+        tutorial_throw_flag = true; 
+    }
+    if (player->state == PLR_STE_SUMMON) { 
+        if (tutorial_summon_flag) printf("summon_flag\n");
+        tutorial_summon_flag = true; 
+    }
+
+    if (tutorial_summon_flag) {
+        if (player->state == PLR_STE_GRAB && player->input->isDown(K_RECYCLE)) {
+            if (tutorial_recycle_flag) printf("recycle_flag\n");
+            tutorial_recycle_flag = true;
+        }
+    }
+
+    if (tutorial_recycle_flag && tutorial_summon_flag && tutorial_throw_flag) {
+        TweenObject* tween = new TweenObject();
+        tween->add(0, 1, 100, IN_OUT);
+        baby->get_tweens()->add_tween("tutorial", tween);
+        tween = new TweenObject();
+        tween->add(0, 1, 100, IN_OUT);
+        ui->tweens->add_tween("tutorial", tween);
+    }
+    
+    update_game();
 }
 
 void Game::update_start() {
@@ -244,14 +284,7 @@ void Game::render() {
     SDL_SetRenderTarget(renderer, screen_tex);
 
     // Render
-    SDL_Rect bg_pos = { 
-        int(-25 - 25 * std::cos(Game::TICK * M_PI / 270)), 
-        int(-25 - 25 * std::sin(Game::TICK * M_PI / 270)), 
-        int(WINDOW_WIDTH + 50 + 50 * std::cos(Game::TICK * M_PI / 270)), 
-        int(WINDOW_HEIGHT + 50 + 50 * std::sin(Game::TICK * M_PI / 270)) 
-    };
-
-    SDL_RenderCopy(renderer, background, NULL, &bg_pos);
+    render_background();
 
     for (GameObject* goi : Game::objects) {
         SDL_Rect pos = { 
@@ -299,6 +332,50 @@ void Game::render() {
 
     SDL_RenderPresent(renderer);
     // printf("Render end...\n");
+}
+
+void Game::render_background() {
+    switch (state) {
+        case GME_STE_GAME: {
+            SDL_Rect bg_pos = { 
+                int(-25 - 25 * std::cos(Game::TICK * M_PI / 270)), 
+                int(-25 - 25 * std::sin(Game::TICK * M_PI / 270)), 
+                int(WINDOW_WIDTH + 50 + 50 * std::cos(Game::TICK * M_PI / 270)), 
+                int(WINDOW_HEIGHT + 50 + 50 * std::sin(Game::TICK * M_PI / 270)) 
+            };
+            SDL_RenderCopy(renderer, background, NULL, &bg_pos);
+            break;
+        }
+        case GME_STE_TITLE:
+            SDL_Rect bg_pos;
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            bg_pos.x = 0;
+            bg_pos.y = 0;
+            bg_pos.w = WINDOW_WIDTH;
+            bg_pos.h = WINDOW_HEIGHT;
+            SDL_RenderFillRect(renderer, &bg_pos);
+            break;
+        case GME_STE_TUTORIAL: {
+            SDL_Rect bg_pos = { 
+                int(-25 - 25 * std::cos(Game::TICK * M_PI / 270)), 
+                int(-25 - 25 * std::sin(Game::TICK * M_PI / 270)), 
+                int(WINDOW_WIDTH + 50 + 50 * std::cos(Game::TICK * M_PI / 270)), 
+                int(WINDOW_HEIGHT + 50 + 50 * std::sin(Game::TICK * M_PI / 270)) 
+            };
+            SDL_RenderCopy(renderer, background, NULL, &bg_pos);
+            if (tweens->get_tween("bg_fade_black") != nullptr) {
+                std::cout << tweens->get_tween("bg_fade_black")->value() << std::endl;
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, tweens->get_tween("bg_fade_black")->value());
+                bg_pos.x = 0;
+                bg_pos.y = 0;
+                bg_pos.w = WINDOW_WIDTH;
+                bg_pos.h = WINDOW_HEIGHT;
+                SDL_RenderFillRect(renderer, &bg_pos);
+            }
+            break;
+        }
+    }
+    
 }
 
 void Game::updateEnemy(Enemy* obj) {
@@ -415,6 +492,8 @@ void Game::cleanObjects() {
         }
         goi->get_tweens()->clean_tweens();
     }
+
+    tweens->clean_tweens();
 }
 
 void Game::remove_object(GameObject* goi) {

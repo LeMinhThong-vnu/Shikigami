@@ -1,165 +1,116 @@
 {
-  "frames": [
-    {
-      "filename": "title_0000.png",
-      "frame": {
-        "x": 0,
-        "y": 0,
-        "w": 745,
-        "h": 71
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 745,
-        "h": 71
-      },
-      "sourceSize": {
-        "w": 745,
-        "h": 71
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "title_0001.png",
-      "frame": {
-        "x": 0,
-        "y": 71,
-        "w": 629,
-        "h": 105
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 629,
-        "h": 105
-      },
-      "sourceSize": {
-        "w": 629,
-        "h": 105
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "title_0003.png",
-      "frame": {
-        "x": 0,
-        "y": 176,
-        "w": 284,
-        "h": 182
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 284,
-        "h": 182
-      },
-      "sourceSize": {
-        "w": 284,
-        "h": 182
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "title_0005.png",
-      "frame": {
-        "x": 284,
-        "y": 176,
-        "w": 250,
-        "h": 39
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 250,
-        "h": 39
-      },
-      "sourceSize": {
-        "w": 250,
-        "h": 39
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "title_0002.png",
-      "frame": {
-        "x": 284,
-        "y": 215,
-        "w": 227,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 227,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 227,
-        "h": 32
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
-    },
-    {
-      "filename": "title_0004.png",
-      "frame": {
-        "x": 511,
-        "y": 215,
-        "w": 128,
-        "h": 128
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 128,
-        "h": 128
-      },
-      "sourceSize": {
-        "w": 128,
-        "h": 128
-      },
-      "pivot": {
-        "x": 0.5,
-        "y": 0.5
-      }
+    "frames": {
+        "shikigami":
+        {
+           "x": 0,
+           "y": 0,
+           "w": 629,
+           "h": 105
+        },
+        "protect_the_child":
+        {
+           "x": 0,
+           "y": 105,
+           "w": 467,
+           "h": 62
+        },
+        "wave_final":
+        {
+           "x": 0,
+           "y": 167,
+           "w": 437,
+           "h": 60
+        },
+        "press_i_to_summon":
+        {
+           "x": 0,
+           "y": 227,
+           "w": 291,
+           "h": 33
+        },
+        "press_p_to_recycle":
+        {
+           "x": 0,
+           "y": 260,
+           "w": 285,
+           "h": 40
+        },
+        "press_i_to_confirm":
+        {
+           "x": 285,
+           "y": 260,
+           "w": 284,
+           "h": 34
+        },
+        "press_p_to_cancel":
+        {
+           "x": 0,
+           "y": 300,
+           "w": 273,
+           "h": 34
+        },
+        "wave_2":
+        {
+           "x": 0,
+           "y": 334,
+           "w": 267,
+           "h": 61
+        },
+        "wave_3":
+        {
+           "x": 273,
+           "y": 300,
+           "w": 265,
+           "h": 62
+        },
+        "wave_1":
+        {
+           "x": 0,
+           "y": 395,
+           "w": 263,
+           "h": 59
+        },
+        "press_j_to_throw":
+        {
+           "x": 263,
+           "y": 395,
+           "w": 262,
+           "h": 35
+        },
+        "wasd_to_move":
+        {
+           "x": 0,
+           "y": 454,
+           "w": 254,
+           "h": 34
+        },
+        "not_enough_spirit":
+        {
+           "x": 263,
+           "y": 430,
+           "w": 250,
+           "h": 39
+        },
+        "press_j_to_grab":
+        {
+           "x": 291,
+           "y": 227,
+           "w": 239,
+           "h": 33
+        },
+        "press_any_key_to_start":
+        {
+           "x": 267,
+           "y": 362,
+           "w": 227,
+           "h": 32
+        },
+        "gameplay":
+        {
+           "x": 467,
+           "y": 105,
+           "w": 130,
+           "h": 86
+        }
     }
-  ],
-  "meta": {
-    "app": "http://free-tex-packer.com",
-    "version": "0.6.7",
-    "image": "text.png",
-    "format": "RGBA8888",
-    "size": {
-      "w": 745,
-      "h": 358
-    },
-    "scale": 1
-  }
 }

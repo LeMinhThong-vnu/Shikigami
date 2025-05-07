@@ -33,6 +33,8 @@ class Shikigami : public GameObject {
 
         SHIKIGAMI_STATES get_state() { return state; }
 
+        int get_cost() { return cost; }
+
     protected:
         bool grabable = false;
         SHIKIGAMI_STATES state = SHK_STE_IDLE;
@@ -42,6 +44,8 @@ class Shikigami : public GameObject {
         int damage = 20;
         int cooldown = 0;
         int cooldown_max = 50;
+        int cost = 1;
+        Enemy* target = nullptr;
 };
 
 #endif

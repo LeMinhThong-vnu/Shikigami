@@ -32,6 +32,8 @@ class Game {
 
         void render();
 
+        void render_background();
+
         void debug();
 
         void clean();
@@ -70,6 +72,8 @@ class Game {
 
         void update_start();
 
+        void update_tutorial();
+
         bool isQuit() { return quit; };
 
         void insertRenderBuffer(GameObject* goi, std::string layer_key);
@@ -82,6 +86,8 @@ class Game {
 
         GAME_STATES get_state() { return state; }
 
+        void set_state(GAME_STATES _state) { state = _state; }
+
     private:
         static std::vector<GameObject*> objects;
         std::map<std::string, std::vector<GameObject*>> layers = {};
@@ -93,9 +99,15 @@ class Game {
         bool quit = false;
         SDL_Texture* shadow = nullptr;
         SDL_Texture* background = nullptr;
+        TweenComponent* tweens = nullptr;
         std::vector<GameObject*> obj_buffer = {};
         UI* ui = nullptr;
         GAME_STATES state = GAME_STATES::GME_STE_TITLE;
+        
+        // Tutorial
+        bool tutorial_summon_flag = false;
+        bool tutorial_throw_flag = false;
+        bool tutorial_recycle_flag = false;
 };
 
 #endif

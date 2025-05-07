@@ -3,50 +3,21 @@
     "version": "0.6.7"
   },
   "savePath": "C:\\Users\\Abc\\Desktop\\Coding\\Sealmetry_v1.1\\assets\\images",
-  "images": [
-    {
-      "name": "title_0000.png",
-      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/title_0000.png",
-      "folder": ""
-    },
-    {
-      "name": "title_0001.png",
-      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/title_0001.png",
-      "folder": ""
-    },
-    {
-      "name": "title_0002.png",
-      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/title_0002.png",
-      "folder": ""
-    },
-    {
-      "name": "title_0003.png",
-      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/title_0003.png",
-      "folder": ""
-    },
-    {
-      "name": "title_0004.png",
-      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/title_0004.png",
-      "folder": ""
-    },
-    {
-      "name": "title_0005.png",
-      "path": "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/title_0005.png",
-      "folder": ""
-    }
+  "images": [],
+  "folders": [
+    "C:/Users/Abc/Desktop/Coding/Sealmetry_v1.1/assets/images/dump/text"
   ],
-  "folders": [],
   "packOptions": {
     "textureName": "text",
     "textureFormat": "png",
-    "removeFileExtension": false,
-    "prependFolderName": true,
+    "removeFileExtension": true,
+    "prependFolderName": false,
     "base64Export": false,
     "tinify": false,
     "tinifyKey": "",
     "scale": 1,
     "filter": "none",
-    "exporter": "JSON (array)",
+    "exporter": "custom",
     "fileName": "pack-result",
     "savePath": "C:\\Users\\Abc\\Desktop\\Coding\\Sealmetry_v1.1\\assets\\images",
     "width": 2048,

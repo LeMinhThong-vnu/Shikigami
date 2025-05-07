@@ -18,7 +18,7 @@ class Jizo : public Shikigami {
 
         void attack();
 
-        void thrown();
+        void thrown(double _angle);
 
     private:
         Enemy* target = nullptr;

@@ -11,14 +11,18 @@ Jizo::Jizo(int _x, int _y, Game* _game) : Shikigami(_x, _y, SHIKIGAMI_TYPES::JIZ
     cooldown_max = 50;
     cooldown = cooldown_max;
     damage = 20;
+    cost = 2;
 }
 
 Jizo::~Jizo() {
     // Shikigami::~Shikigami();
 }
 
-void Jizo::thrown() {
+void Jizo::thrown(double _angle) {
     attack();
+    if (state != SHK_STE_ATTACK) {
+        Shikigami::thrown(_angle);
+    }
 }
 
 void Jizo::update() {

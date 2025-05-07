@@ -12,6 +12,8 @@ class Baby : public GameObject {
 
         void update();
 
+        void render();
+
         void damage(int dmg);
 
     private:

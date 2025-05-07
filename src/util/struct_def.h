@@ -30,4 +30,9 @@ struct TweenIndex {
     std::string flag;
 };
 
+struct AtlusFrame {
+    int x, y,
+        w, h;
+};
+
 #endif

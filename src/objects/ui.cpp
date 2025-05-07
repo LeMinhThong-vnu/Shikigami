@@ -3,6 +3,9 @@
 #include "../game.h"
 #include "../util/draw.h"
 #include "../global.h"
+#include <iostream>
+#include <json.h>
+#include <fstream>
 
 UI::UI(Game* _owner) {
     game = _owner;
@@ -12,7 +15,24 @@ UI::UI(Game* _owner) {
     sprite->setAnim("spirit");
     sprite->setOrigin(0.5, 0.5);
     sprite->setScale(0.5, 0.5);
-    txtr_text = load_texture("text");
+    text_texture = load_texture("text");
+
+    std::ifstream file("assets/images/text.json");
+    Json::Value data;
+    Json::Reader reader;
+    reader.parse(file, data);
+    Json::Value frame_data = data["frames"];
+    for (Json::Value::ArrayIndex i = 0; i != frame_data.size(); i++) {
+        AtlusFrame frame;
+        std::string key = frame_data.getMemberNames()[i];
+        frame.x = frame_data[key]["x"].asInt();
+        frame.y = frame_data[key]["y"].asInt();
+        frame.w = frame_data[key]["w"].asInt();
+        frame.h = frame_data[key]["h"].asInt();
+        text_atlus.insert({key, frame});
+        std::cout << key << std::endl;
+        printf("%s: {\n\tx: %d,\n\ty: %d,\n\tw: %d,\n\th: %d,\n}\n", key.c_str(), frame.x, frame.y, frame.w, frame.h);
+    }
 }
 
 UI::~UI() {
@@ -41,6 +61,8 @@ void UI::render() {
         case GME_STE_START:
             render_start();
             break;
+        case GME_STE_TUTORIAL:
+            render_tutorial();
         default:
             break;
     }
@@ -48,107 +70,162 @@ void UI::render() {
     tweens->clean_tweens();
 }
 
-void UI::render_start() {
+void UI::print_text(std::string key, int x, int y) {
     SDL_Rect pos, clip;
+    AtlusFrame frame = text_atlus[key];
+    pos.w = frame.w;
+    pos.h = frame.h;
+    pos.x = x - (pos.w / 2);
+    pos.y = y - (pos.h / 2);
+    clip.w = frame.w;
+    clip.h = frame.h;
+    clip.x = frame.x;
+    clip.y = frame.y;
+    SDL_SetTextureAlphaMod(text_texture, 255);
+    SDL_RenderCopyEx(renderer, text_texture, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
+    // printf("%s: {\n\tx: %d,\n\ty: %d,\n\tw: %d,\n\th: %d,\n}\n", key.c_str(), frame.x, frame.y, frame.w, frame.h);
+}
 
-    tweens->update();
+void UI::print_text(std::string key, int x, int y, double sx, double sy) {
+    SDL_Rect pos, clip;
+    AtlusFrame frame = text_atlus[key];
+    pos.w = frame.w * sx;
+    pos.h = frame.h * sy;
+    pos.x = x - (pos.w / 2);
+    pos.y = y - (pos.h / 2);
+    clip.w = frame.w;
+    clip.h = frame.h;
+    clip.x = frame.x;
+    clip.y = frame.y;
+    SDL_SetTextureAlphaMod(text_texture, 255);
+    SDL_RenderCopyEx(renderer, text_texture, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
+    // printf("%s: {\n\tx: %d,\n\ty: %d,\n\tw: %d,\n\th: %d,\n}\n", key.c_str(), frame.x, frame.y, frame.w, frame.h);
+}
 
-    // Circle
-    TweenObject* tween = tweens->get_tween("start");
+void UI::print_text(std::string key, int x, int y, double sx, double sy, double alpha) {
+    SDL_Rect pos, clip;
+    AtlusFrame frame = text_atlus[key];
+    pos.w = frame.w * sx;
+    pos.h = frame.h * sy;
+    pos.x = x - (pos.w / 2);
+    pos.y = y - (pos.h / 2);
+    clip.w = frame.w;
+    clip.h = frame.h;
+    clip.x = frame.x;
+    clip.y = frame.y;
+    SDL_SetTextureAlphaMod(text_texture, alpha);
+    SDL_RenderCopyEx(renderer, text_texture, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
+    // printf("%s: {\n\tx: %d,\n\ty: %d,\n\tw: %d,\n\th: %d,\n}\n", key.c_str(), frame.x, frame.y, frame.w, frame.h);
+}
+
+void UI::print_text(std::string key, int x, int y, double sx, double sy, double alpha, double ox, double oy) {
+    SDL_Rect pos, clip;
+    AtlusFrame frame = text_atlus[key];
+    pos.w = frame.w * sx;
+    pos.h = frame.h * sy;
+    pos.x = x - (pos.w * ox);
+    pos.y = y - (pos.h * oy);
+    clip.w = frame.w;
+    clip.h = frame.h;
+    clip.x = frame.x;
+    clip.y = frame.y;
+    SDL_SetTextureAlphaMod(text_texture, alpha);
+    SDL_RenderCopyEx(renderer, text_texture, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
+    // printf("%s: {\n\tx: %d,\n\ty: %d,\n\tw: %d,\n\th: %d,\n}\n", key.c_str(), frame.x, frame.y, frame.w, frame.h);
+}
+
+void UI::render_tutorial() {
+    switch (game->player->state) {
+        case PLR_STE_IDLE: case PLR_STE_WALK: case PLR_STE_ROLL:{
+            print_text("press_i_to_summon", game->player->body->getX(), game->player->body->getY() + 50);
+            print_text("wasd_to_move", game->player->body->getX(), game->player->body->getY() + 100);
+            break;
+        }
+        case PLR_STE_SUMMON: {
+            print_text("press_i_to_summon", game->player->body->getX(), game->player->body->getY() + 50);
+            print_text("press_p_to_cancel", game->player->body->getX(), game->player->body->getY() + 100);
+            break;
+        }
+        case PLR_STE_GRAB: {
+            print_text("press_j_to_throw", game->player->body->getX(), game->player->body->getY() + 50);
+            print_text("press_p_to_recycle", game->player->body->getX(), game->player->body->getY() + 100);
+            break;
+        }
+        default: break;
+    }
+    
+    for (GameObject* go : game->objects) {
+        if (go->getType() == SHIKIGAMI) {
+            Shikigami* shiki = dynamic_cast<Shikigami*>(go);
+            if (shiki->get_state() == SHK_STE_IDLE) {
+                print_text("press_j_to_grab", shiki->getBody()->getX(), shiki->getBody()->getY() + 50);
+            }
+        }
+    }
+
+    render_game();
+}
+
+void UI::render_start() {
+    TweenObject* tween = tweens->get_tween("tutorial");
     if (tween->isComplete()) {
         game->state = GME_STE_GAME;
     }
-    double cirlce_scale = 128 + (tween->value() / 255) * (WINDOW_WIDTH * 2 / 3);
-    pos.w = cirlce_scale;
-    pos.h = cirlce_scale;
-    pos.x = (WINDOW_WIDTH / 2) - (pos.w / 2);
-    pos.y = (WINDOW_HEIGHT * 2 / 3) - (pos.h / 2);
-    clip.w = 128;
-    clip.h = 128;
-    clip.x = 511;
-    clip.y = 215;
-    SDL_RenderCopyEx(renderer, txtr_text, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    pos.x = 0;
-    pos.y = 0;
-    pos.w = WINDOW_WIDTH;
-    pos.h = (WINDOW_HEIGHT * 2 / 3) - (cirlce_scale / 2) + 2;
-    SDL_RenderFillRect(renderer, &pos);
-    pos.x = 0;
-    pos.y = 0;
-    pos.w = (WINDOW_WIDTH - cirlce_scale) / 2 + 2;
-    pos.h = WINDOW_HEIGHT;
-    SDL_RenderFillRect(renderer, &pos);
-    pos.x = (WINDOW_WIDTH + cirlce_scale) / 2 - 2;
-    pos.y = 0;
-    pos.w = (WINDOW_WIDTH - cirlce_scale) / 2 + 2;
-    pos.h = WINDOW_HEIGHT;
-    SDL_RenderFillRect(renderer, &pos);
-    pos.x = 0;
-    pos.y = (WINDOW_HEIGHT * 2 / 3) + (cirlce_scale / 2) - 2;
-    pos.w = WINDOW_WIDTH;
-    pos.h = WINDOW_HEIGHT - pos.y + 2;
-    SDL_RenderFillRect(renderer, &pos);
 
     // "Protect the Dreaming Child"
-    pos.w = 629 * (1 + tween->value() / 255);
-    pos.h = 105 * (1 - tween->value() / 255);
-    pos.x = (WINDOW_WIDTH / 2) - (pos.w / 2);
-    pos.y = 300 - (pos.h / 2);
-    clip.w = 745;
-    clip.h = 71;
-    clip.x = 0;
-    clip.y = 0;
-    SDL_RenderCopyEx(renderer, txtr_text, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
+    print_text("protect_the_child", WINDOW_WIDTH / 2, 300, 1 + tween->value() / 255, 1 - tween->value() / 255);
 }
 
 void UI::render_game() {
     double start_x, start_y, ind;
     double offset_x = 75;
-    SDL_Rect clip;
-    
+    SDL_Rect clip, pos;
+    double base_alpha = 255;
+    if (tweens->get_tween("summon_alpha") != nullptr) {
+        base_alpha = tweens->get_tween("summon_alpha")->value();
+    }
+    else if (game->player->state != PLR_STE_SUMMON) base_alpha = 175;
+
     // Spirits count
-    start_x = 75;
-    start_y = 75 + (128 / 2);
+    start_x = 75 + 130;
+    start_y = 75 + (86 / 3);
+    offset_x = 50;
+    print_text("gameplay", 100, 75);
+    sprite->setScale(0.5, 0.5);
     sprite->setOrigin(0.5, 1);
     sprite->setAnim("spirit");
-    // sprite->setAlpha(255);
-    sprite->setScale(0.5, 0.5);
+    sprite->setAlpha(base_alpha);
     for (int i = 0; i < game->player->spirit_count; i++) {
-        double angle = i * 2 * M_PI / game->player->spirit_count;
-        start_x = game->player->getBody()->getX() + std::cos((Game::TICK / 10) + angle) * offset_x;
-        start_y = game->player->getBody()->getY() + std::sin((Game::TICK / 10) + angle) * offset_x - 64;
         sprite->setAngle(std::sin(Game::TICK / 10) * 10 + (rand() % 2 - 4));
         sprite->setScale(1 - std::cos(Game::TICK / 10) * 0.15, 1 + std::sin(Game::TICK / 10) * 0.15);
-        sprite->render(start_x + std::sin(Game::TICK / 5) * 4, start_y + std::cos(Game::TICK / 10) * 8);
+        sprite->render(start_x + offset_x * i + std::sin(Game::TICK / 5) * 4, start_y + std::cos(Game::TICK / 10) * 8, SDL_FLIP_NONE);
     }
     if (game->player->spirit_count < game->player->spirit_count_max) {
         clip.x = 0;
         clip.w = 128;
         clip.h = 128 * (game->player->spirit_cooldown_max - game->player->spirit_cooldown)/game->player->spirit_cooldown_max;
         clip.y = 128 - clip.h;
-        start_x = game->player->getBody()->getX();
-        start_y = game->player->getBody()->getY() - 64;
-        sprite->setAlpha(225 * (1 - (game->player->spirit_cooldown / game->player->spirit_cooldown_max)));
         sprite->setAngle(std::sin(Game::TICK / 10) * 10 + (rand() % 2 - 4));
         sprite->setScale(1 - std::cos(Game::TICK / 10) * 0.15, 1 + std::sin(Game::TICK / 10) * 0.15);
-        sprite->render(start_x + std::sin(Game::TICK / 5) * 4, start_y + std::cos(Game::TICK / 10) * 8, SDL_FLIP_NONE, &clip);
+        sprite->render(start_x + offset_x * game->player->spirit_count + std::sin(Game::TICK / 5) * 4, start_y + std::cos(Game::TICK / 10) * 8, SDL_FLIP_NONE, &clip);
     }
-    sprite->setAlpha(255);
 
+    start_x = 75;
+    start_y = 75 + (86 * 2 / 3);
+    sprite->setAlpha(base_alpha);
     if (game->player->state == PLR_STE_SUMMON) {
         sprite->setAngle(0);
         switch (game->player->summon_index) {
             case 0: {
-                sprite->setAnim("shiki_icon_fox");
+                sprite->setAnim("shiki_icon_fox_cost");
                 break;
             }
             case 1: {
-                sprite->setAnim("shiki_icon_jizo");
+                sprite->setAnim("shiki_icon_jizo_cost");
                 break;
             }
             default:
-                sprite->setAnim("shiki_icon_fox");
+                sprite->setAnim("shiki_icon_fox_cost");
                 break;
         }
         sprite->setScale(0.75, 0.75);
@@ -171,24 +248,22 @@ void UI::render_game() {
     if (tweens->get_tween("not_enough_spirit") != nullptr) {
         // "Press Start"
         TweenObject* tween = tweens->get_tween("not_enough_spirit");
-        SDL_Rect pos, clip;
-        pos.w = 250 * (1 + tween->value());
-        pos.h = 39 * (1 - tween->value());
-        pos.x = (WINDOW_WIDTH / 2) - (pos.w / 2);
-        pos.y = 300 - (pos.h / 2);
-        clip.x = 284;
-        clip.y = 176;
-        clip.w = 250;
-        clip.h = 39;
-        SDL_RenderCopyEx(renderer, txtr_text, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
+        print_text("not_enough_spirit", WINDOW_WIDTH / 2, 300, 1 + tween->value() / 255, 1 - tween->value() / 255);
+    }
+
+    if (tweens->get_tween("protect_the_child") != nullptr) {
+        // "Press Start"
+        TweenObject* tween = tweens->get_tween("protect_the_child");
+        print_text("protect_the_child", WINDOW_WIDTH / 2, 300, 1 + tween->value(), 1 - tween->value());
     }
 
     // Summons count
-    start_x = 75;
-    start_y = 200;
+    start_x = 75 + 130;
+    start_y = 75 + (86 * 2 / 3);
+    sprite->setAlpha(base_alpha);
     ind = 0;
-    sprite->setAlpha(255);
     sprite->setAngle(0);
+    sprite->setScale(0.5, 0.5);
     // sprite->setAlpha(255);
     for (Shikigami* shiki : game->player->summons) {
         switch (shiki->get_shiki_type()) {
@@ -215,71 +290,12 @@ void UI::render_pause() {
 
 void UI::render_title() {
     SDL_Rect pos, clip;
-    
-    // Circle
-    double cirlce_scale = 128;
-    pos.w = cirlce_scale;
-    pos.h = cirlce_scale;
-    pos.x = (WINDOW_WIDTH / 2) - (pos.w / 2);
-    pos.y = (WINDOW_HEIGHT * 2 / 3) - (pos.h / 2);
-    clip.w = 128;
-    clip.h = 128;
-    clip.x = 511;
-    clip.y = 215;
-    SDL_RenderCopyEx(renderer, txtr_text, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    pos.x = 0;
-    pos.y = 0;
-    pos.w = WINDOW_WIDTH;
-    pos.h = (WINDOW_HEIGHT * 2 / 3) - (cirlce_scale / 2);
-    SDL_RenderFillRect(renderer, &pos);
-    pos.x = 0;
-    pos.y = 0;
-    pos.w = (WINDOW_WIDTH - cirlce_scale) / 2;
-    pos.h = WINDOW_HEIGHT;
-    SDL_RenderFillRect(renderer, &pos);
-    pos.x = (WINDOW_WIDTH + cirlce_scale) / 2;
-    pos.y = 0;
-    pos.w = (WINDOW_WIDTH - cirlce_scale) / 2;
-    pos.h = WINDOW_HEIGHT;
-    SDL_RenderFillRect(renderer, &pos);
-    pos.x = 0;
-    pos.y = (WINDOW_HEIGHT * 2 / 3) + (cirlce_scale / 2);
-    pos.w = WINDOW_WIDTH;
-    pos.h = WINDOW_HEIGHT - pos.y;
-    SDL_RenderFillRect(renderer, &pos);
 
     // Title
-    pos.w = 629;
-    pos.h = 105;
-    pos.x = (WINDOW_WIDTH / 2) - (pos.w / 2);
-    pos.y = 300 - (pos.h / 2);
-    clip.w = 629;
-    clip.h = 105;
-    clip.x = 0;
-    clip.y = 71;
-    SDL_RenderCopyEx(renderer, txtr_text, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
+    print_text("shikigami", WINDOW_WIDTH / 2, 300);
     
     // "Press Start"
-    pos.w = 227;
-    pos.h = 32;
-    pos.x = (WINDOW_WIDTH / 2) - (pos.w / 2);
-    pos.y = 300 + 105 - (pos.h / 2);
-    clip.w = 227;
-    clip.h = 32;
-    clip.x = 284;
-    clip.y = 215;
-    SDL_RenderCopyEx(renderer, txtr_text, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
-    
-    // "Instructions"
-    pos.w = 284;
-    pos.h = 182;
-    pos.x = (WINDOW_WIDTH * 1 / 3) - (pos.w / 1);
-    pos.y = (WINDOW_WIDTH * 2 / 3) - (pos.h / 1);
-    clip.x = 0;
-    clip.y = 176;
-    clip.w = 284;
-    clip.h = 182;
-    SDL_RenderCopyEx(renderer, txtr_text, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
+    print_text("press_any_key_to_start", WINDOW_WIDTH / 2, 300 + 105);
     
 }
+

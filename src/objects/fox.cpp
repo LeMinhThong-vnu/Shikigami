@@ -8,6 +8,7 @@ Fox::Fox(int _x, int _y, Game* _game) : Shikigami(_x, _y, SHIKIGAMI_TYPES::FOX, 
     life_max = 3;
     life = 3;
     cooldown = cooldown_max;
+    cost = 1;
 }
 
 Fox::~Fox() {
@@ -53,10 +54,18 @@ void Fox::update_idle() {
     }
 
     if (cooldown == 0) {
-        life--;
-        state = SHK_STE_WAIT;
-        cooldown = 10;
-        sprite->setAnim("land");
+        for (DistanceBetween dist_btwn : body->getDistances()) {
+            // std::cout << dist_btwn.distance << std::endl;
+            GameObject* go = dist_btwn.body->getOwner();
+            if (go->getType() == GAME_OBJECT_TYPES::ENEMY) {
+                target = dynamic_cast<Enemy*>(go);
+                life--;
+                state = SHK_STE_WAIT;
+                cooldown = 10;
+                sprite->setAnim("land");
+                break;
+            }
+        }
     }
 
     Shikigami::update_idle();
@@ -72,16 +81,9 @@ void Fox::update_wait() {
 void Fox::attack() {
     double _angle = 90 - 90 * facing;
     double _v = 5;
-    for (DistanceBetween dist_btwn : body->getDistances()) {
-        // std::cout << dist_btwn.distance << std::endl;
-        GameObject* go = dist_btwn.body->getOwner();
-        if (go->getType() == GAME_OBJECT_TYPES::ENEMY) {
-            AngleBetween angl_btwn = body->angleFrom(dist_btwn.body);
-            _angle = angl_btwn.angle + (rand() % 10 - 5);
-            _v = dist_btwn.distance / 20;
-            break;
-        }
-    }
+    AngleBetween angl_btwn = body->angleFrom(target->getBody());
+    _angle = angl_btwn.angle + (rand() % 10 - 5);
+    _v = body->getDistance(target->getBody()) / 20;
     // std::cout << "angle: " << _angle << std::endl;
     facing = ((_angle > 90 && _angle < 270) ? -1 : 1);
     body->setVelocityAngle(_v, _angle);

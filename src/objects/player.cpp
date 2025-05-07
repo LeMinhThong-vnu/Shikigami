@@ -77,9 +77,14 @@ void Player::update_idle() {
         }
     }
 
-    if (state == PLR_STE_WALK && move_x == 0 && move_y == 0) {
-        state = PLR_STE_IDLE;
-        sprite->setAnim("walk");
+    if (move_x == 0 && move_y == 0) {
+        if (state == PLR_STE_WALK) {
+            state = PLR_STE_IDLE;
+            sprite->setAnim("walk");
+        }
+        else if (state != PLR_STE_ROLL && sprite->isComplete()) {
+            sprite->setAnim("idle");
+        }
     }
 
     if (move_x != 0 || move_y != 0) body->addVelocityAngle(move_speed, _angle);
@@ -126,6 +131,9 @@ void Player::update_idle() {
         state = PLR_STE_SUMMON;
         sprite->setAnim("summon_pre");
         summon_delay = summon_delay_max;
+        TweenObject* tween = new TweenObject();
+        tween->add(175, 255, 50, OUT);
+        game->get_ui()->tweens->add_tween("summon_alpha", tween);
     }
 }
 
@@ -134,15 +142,23 @@ void Player::update_summon() {
         sprite->setAnim("summon");
     }
 
+    if ((input->isDown(K_LEFT) || input->isDown(K_RIGHT)) && summon_delay > 0) { summon_delay = 2; }
+
     if (input->isDown(K_LEFT) && summon_delay == 0) {
         summon_index--;
-        summon_delay = summon_delay_max;
+        summon_delay = 2;
         if (summon_index < 0) summon_index = summon_index_max;
     }
     if (input->isDown(K_RIGHT) && summon_delay == 0) {
         summon_index++;
-        summon_delay = summon_delay_max;
+        summon_delay = 2;
         if (summon_index > summon_index_max) summon_index = 0;
+    }
+
+    if (input->isDown(K_RECYCLE)) {
+        sprite->setAnim("summon_post");
+        state = PLR_STE_IDLE;
+        return;
     }
 
     if (input->isDown(K_SUMMON) && state != PLR_STE_GRAB && summon_delay == 0) {
@@ -175,6 +191,9 @@ void Player::update_summon() {
         if (pass) {
             spirit_cooldown = spirit_cooldown_max;
             sprite->setAnim("summon_post");
+            TweenObject* tween = new TweenObject();
+            tween->add(255, 175, 50, OUT);
+            game->get_ui()->tweens->add_tween("summon_alpha", tween);
         }
         else {
             TweenObject* tween = new TweenObject();
@@ -256,7 +275,7 @@ void Player::update_grab() {
                                 dynamic_cast<Fox*>(shk)->thrown(_angle);
                                 break;
                             case JIZO:
-                                dynamic_cast<Jizo*>(shk)->thrown();
+                                dynamic_cast<Jizo*>(shk)->thrown(_angle);
                                 break;
                         }
                         break;
@@ -292,6 +311,16 @@ void Player::update_grab() {
 
     if (move_x != 0 && state != PLR_STE_THROW) facing = move_x;
     
+    if (input->isDown(K_RECYCLE) && grabbing != nullptr && state == PLR_STE_GRAB) {
+        if (grabbing->getType() == SHIKIGAMI) {
+            sprite->setAnim("summon_post");
+            state = PLR_STE_IDLE;
+            spirit_count = std::min(spirit_count + (dynamic_cast<Shikigami*>(grabbing)->get_cost() / 2), spirit_count_max);
+            if (spirit_count == spirit_count_max) spirit_cooldown = 0;
+            grabbing->setRemove(true);
+        }
+    }
+
     // Grab input
     if (grab_delay == 0 && input->isDown(K_GRAB) && state == PLR_STE_GRAB && grabbing != nullptr) {
         grab_delay = grab_delay_max;

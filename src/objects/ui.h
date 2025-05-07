@@ -1,6 +1,8 @@
 #ifndef UI_H
 #define UI_H
 
+#include <map>
+#include <cstring>
 #include "player.h"
 #include "../util/enum_def.h"
 #include "../global.h"
@@ -19,22 +21,26 @@ class UI {
 
         void render();
 
+        TweenComponent* get_tweens() { return tweens; }
+
     private:
 
         void render_game();
-        void update_game();
 
         void render_pause();
-        void update_pause();
 
         void render_start();
-        void update_start();
 
         void render_gameover();
-        void update_gameover();
 
         void render_title();
-        void update_title();
+
+        void render_tutorial();
+
+        void print_text(std::string key, int x, int y);
+        void print_text(std::string key, int x, int y, double sx, double sy);
+        void print_text(std::string key, int x, int y, double sx, double sy, double alpha);
+        void print_text(std::string key, int x, int y, double sx, double sy, double alpha, double ox, double oy);
 
         SpriteComponent* sprite;
 
@@ -42,7 +48,9 @@ class UI {
 
         Game* game;
 
-        SDL_Texture* txtr_text = nullptr;
+        SDL_Texture* text_texture = nullptr;
+
+        std::map<std::string, AtlusFrame> text_atlus = {};
 };
 
 #endif

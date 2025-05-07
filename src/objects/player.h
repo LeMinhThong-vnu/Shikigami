@@ -11,6 +11,7 @@ class Player : public GameObject {
     public:
         friend class UI;
         friend class Shikigami;
+        friend class Game;
         
         Player(int _x, int _y, Game* _game);
         ~Player();

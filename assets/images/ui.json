@@ -2,7 +2,7 @@
     "meta": {
         "w": 128,
         "h": 128,
-        "rows": 5,
+        "rows": 7,
         "cols": 1
     },
     "animations": {
@@ -10,6 +10,8 @@
         "arrow_right": [{ "index": 2, "duration": 5 }],
         "arrow_left": [{ "index": 1, "duration": 5 }],
         "shiki_icon_fox": [{ "index": 3, "duration": 5 }],
-        "shiki_icon_jizo": [{ "index": 4, "duration": 5 }]
+        "shiki_icon_fox_cost": [{ "index": 4, "duration": 5 }],
+        "shiki_icon_jizo": [{ "index": 5, "duration": 5 }],
+        "shiki_icon_jizo_cost": [{ "index": 6, "duration": 5 }]
     }
 }
