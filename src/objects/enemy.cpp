@@ -10,9 +10,15 @@ Enemy::Enemy(int _x, int _y, ENEMY_TYPES _enemy_type, Game* _game) : GameObject(
     TweenObject* tween = new TweenObject();
     tween->add(1, 0, 100, IN_OUT);
     tweens->add_tween("spawn", tween);
+    body->setPosZ(-100);
 }
 
 Enemy::~Enemy() {
+}
+
+void Enemy::add_damage(int damage) {
+    hp -= damage;
+    game->add_score(50);
 }
 
 void Enemy::grabbed() {
@@ -44,6 +50,7 @@ void Enemy::update_attack() {
 void Enemy::update_spawn() {
     TweenObject* tween = tweens->get_tween("spawn");
     sprite->setScale(1 - tween->value(), 1 + tween->value());
+    body->setPosZ(-100 * tween->value());
     if (tween->isComplete()) {
         state = ENM_STE_IDLE;
     }

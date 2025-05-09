@@ -1,7 +1,9 @@
 #include "ui.h"
+#include "../util/font_loader.h"
 #include "shikigami.h"
 #include "../game.h"
 #include "../util/draw.h"
+#include "baby.h"
 #include "../global.h"
 #include <iostream>
 #include <json.h>
@@ -30,9 +32,9 @@ UI::UI(Game* _owner) {
         frame.w = frame_data[key]["w"].asInt();
         frame.h = frame_data[key]["h"].asInt();
         text_atlus.insert({key, frame});
-        std::cout << key << std::endl;
-        printf("%s: {\n\tx: %d,\n\ty: %d,\n\tw: %d,\n\th: %d,\n}\n", key.c_str(), frame.x, frame.y, frame.w, frame.h);
     }
+
+    font = loadFont("assets/fonts/mingliu.ttf", 32);
 }
 
 UI::~UI() {
@@ -63,6 +65,10 @@ void UI::render() {
             break;
         case GME_STE_TUTORIAL:
             render_tutorial();
+            break;
+        case GME_STE_GAMEOVER:
+            render_gameover();
+            break;
         default:
             break;
     }
@@ -130,6 +136,31 @@ void UI::print_text(std::string key, int x, int y, double sx, double sy, double 
     SDL_RenderCopyEx(renderer, text_texture, &clip, &pos, 0.0, NULL, SDL_FLIP_NONE);
 }
 
+void UI::render_gameover() {
+    TweenObject* tween = tweens->get_tween("gameover_text");
+    int sx = 1;
+    int sy = 1;
+    if (tween != nullptr) {
+        // printf("gameover_text\n");
+        sx = 2 - tween->value();
+        sy = tween->value();
+    }
+    else {
+        SDL_Color color_border, color_text;
+        std::string str = "Final Score: " + std::to_string(game->score);
+        color_border.r = 0;
+        color_border.g = 0;
+        color_border.b = 0;
+        color_border.a = 225;
+        color_text.r = 225;
+        color_text.g = 225;
+        color_text.b = 225;
+        color_text.a = 225;
+        print_text_border(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + 50, font, str.c_str(), color_text, color_border, 0.5, 0.5);
+    }
+    print_text("gameover", WINDOW_WIDTH / 2, 300, sx, sy);
+}
+
 void UI::render_tutorial() {
     switch (game->player->state) {
         case PLR_STE_IDLE: case PLR_STE_WALK: case PLR_STE_ROLL:{
@@ -175,11 +206,29 @@ void UI::render_game() {
     double start_x, start_y, ind;
     double offset_x = 75;
     SDL_Rect clip, pos;
+    SDL_Texture* font_texture = nullptr;
+    SDL_Color color_text, color_border;
+    std::string str = "";
     double base_alpha = 255;
     if (tweens->get_tween("summon_alpha") != nullptr) {
         base_alpha = tweens->get_tween("summon_alpha")->value();
     }
     else if (game->player->state != PLR_STE_SUMMON) base_alpha = 175;
+
+    if (game->state == GME_STE_GAME) {
+        str = std::to_string(std::max(game->baby->get_hp(), 0)) + "/" + std::to_string(game->baby->get_hp_max());
+        color_border.r = 0;
+        color_border.g = 0;
+        color_border.b = 0;
+        color_border.a = 225;
+        color_text.r = 225;
+        color_text.g = 225;
+        color_text.b = 225;
+        color_text.a = 225;
+        print_text_border(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 3, font, str.c_str(), color_text, color_border, 0.5, 0.5);
+        str = "Score: " + std::to_string(game->score);
+        print_text_border(WINDOW_WIDTH / 2, 75, font, str.c_str(), color_text, color_border, 0.5, 0);
+    }
 
     start_x = 75 + 130;
     start_y = 75 + (86 / 3);

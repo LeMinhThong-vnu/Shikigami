@@ -5,6 +5,7 @@
 #include <cstring>
 #include "player.h"
 #include "../util/enum_def.h"
+#include <SDL_ttf.h>
 #include "../global.h"
 #include "../components/sprite_component.h"
 
@@ -50,6 +51,8 @@ class UI {
         SDL_Texture* text_texture = nullptr;
 
         std::map<std::string, AtlusFrame> text_atlus = {};
+
+        TTF_Font* font = nullptr;
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include "../util/class_def.h"
+#include <SDL_mixer.h>
 #include "game_object.h"
 
 class Enemy : public GameObject {
@@ -25,9 +26,7 @@ class Enemy : public GameObject {
 
         virtual void update_attack();
 
-        virtual void add_damage(int damage) {
-            hp -= damage;
-        }
+        virtual void add_damage(int damage);
 
         ENEMY_STATES getState() { return state; }
 
@@ -42,6 +41,7 @@ class Enemy : public GameObject {
         int max_hp = 100;
         int cooldown = 0;
         int cooldown_max = 100;
+        Mix_Chunk* sfx = nullptr;
 };
 
 #endif

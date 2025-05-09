@@ -55,12 +55,13 @@ enum PLAYER_INPUT_KEYS {
 };
 
 enum PLAYER_STATES {
-    PLR_STE_IDLE   = 0,
-    PLR_STE_WALK   = 1,
-    PLR_STE_ROLL   = 2,
-    PLR_STE_GRAB   = 3,
-    PLR_STE_THROW  = 4,
-    PLR_STE_SUMMON = 5,
+    PLR_STE_IDLE     = 0,
+    PLR_STE_WALK     = 1,
+    PLR_STE_ROLL     = 2,
+    PLR_STE_GRAB     = 3,
+    PLR_STE_THROW    = 4,
+    PLR_STE_SUMMON   = 5,
+    PLR_STE_GAMEOVER = 6,
 };
 
 enum ENEMY_STATES {

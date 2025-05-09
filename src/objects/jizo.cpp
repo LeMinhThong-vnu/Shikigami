@@ -12,10 +12,10 @@ Jizo::Jizo(int _x, int _y, Game* _game) : Shikigami(_x, _y, SHIKIGAMI_TYPES::JIZ
     cooldown = cooldown_max;
     damage = 20;
     cost = 2;
+    sfx = Mix_LoadWAV("assets/audio/shiki_jizo.mp3");
 }
 
 Jizo::~Jizo() {
-    
 }
 
 void Jizo::thrown(double _angle) {
@@ -99,6 +99,7 @@ void Jizo::attack() {
     tween_scale->add(-0.5, 0, 30, IN_OUT);
     tweens->add_tween("scale", tween_scale);
     body->setApplyingCollision(false);
+    Mix_PlayChannel(-1, sfx, 0);
 }
 
 void Jizo::update_attack() {

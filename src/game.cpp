@@ -1,4 +1,5 @@
 #include <cmath>
+#include <SDL_mixer.h>
 #include "game.h"
 #include "util/draw.h"
 #include "./objects/game_object.h"
@@ -87,6 +88,13 @@ void Game::handleInput() {
                 tween->add(255, 0, 100, TWEEN_TYPES::IN_OUT);
                 tweens->add_tween("bg_fade_black", tween);
             }
+            if (event.key.keysym.sym == SDLK_r && tweens->get_tween("gameover_bg") == nullptr && state == GME_STE_GAMEOVER) {
+                state = GME_STE_GAME;
+                baby->reset();
+                player->getSprite()->setAnim("start");
+                player->set_state(PLR_STE_IDLE);
+                score = 0;
+            }
             break;
     }
     player->getInput()->handleInput(event);
@@ -135,7 +143,19 @@ bool Game::init() {
     }
     std::cout << "Initiated TTF!" << std::endl;
     SDL_SetRenderDrawColor(renderer, BG_R, BG_G, BG_B, 1);
-
+    // Initiate Sfx
+    if(SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0) {
+        std::cout << "--- SFX INIT ERROR ---" << std::endl;
+        printf("Couldn't initialize SDL Mixer: %s\n", SDL_GetError());
+        std::cout << "-----------------------" << std::endl;
+        return false;
+    }
+    if(Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0) {
+        std::cout << "--- SFX INIT ERROR ---" << std::endl;
+        printf("Couldn't initialize SDL Mixer: %s\n", SDL_GetError());
+        std::cout << "-----------------------" << std::endl;
+        return false;
+    }
     shadow = loadNewTexture("shadow");
     background = loadNewTexture("bg_02");
     SDL_SetTextureAlphaMod(shadow, 50);
@@ -185,24 +205,24 @@ void Game::update() {
 void Game::update_tutorial() {
     
     if (player->grabbing != nullptr) { 
-        if (tutorial_throw_flag) printf("throw_flag\n");
+        // if (tutorial_throw_flag) printf("throw_flag\n");
         tutorial_throw_flag = true; 
     }
     if (player->state == PLR_STE_SUMMON) { 
-        if (tutorial_summon_flag) printf("summon_flag\n");
+        // if (tutorial_summon_flag) printf("summon_flag\n");
         tutorial_summon_flag = true; 
     }
 
     if (tutorial_summon_flag) {
         if (player->state == PLR_STE_GRAB && player->input->isDown(K_RECYCLE)) {
-            if (tutorial_recycle_flag) printf("recycle_flag\n");
+            // if (tutorial_recycle_flag) printf("recycle_flag\n");
             tutorial_recycle_flag = true;
         }
     }
 
     if (tutorial_recycle_flag && tutorial_summon_flag && tutorial_throw_flag) {
         TweenObject* tween = new TweenObject();
-        tween->add(0, 1, 100, IN_OUT);
+        tween->add(1, 0, 100, IN_OUT);
         baby->get_tweens()->add_tween("tutorial", tween);
         tween = new TweenObject();
         tween->add(0, 1, 100, IN_OUT);
@@ -221,7 +241,7 @@ void Game::update_start() {
 }
 
 void Game::update_gameover() {
-
+    update_game();
 }
 
 void Game::update_pause() {
@@ -272,11 +292,13 @@ void Game::render() {
     render_background();
 
     for (GameObject* goi : Game::objects) {
+        int _w = 128 * (1 - std::min(int(std::abs(goi->getBody()->getZ())), 100) / 100);
+        int _h = 64 * (1 - std::min(int(std::abs(goi->getBody()->getZ())), 100) / 100);
         SDL_Rect pos = { 
-            int(goi->getBody()->getX() - 64),
-            int(goi->getBody()->getY() - 32),
-            128,
-            64
+            int(goi->getBody()->getX() - _w / 2),
+            int(goi->getBody()->getY() - _h / 2),
+            _w,
+            _h
         };
         SDL_RenderCopy(renderer, shadow, NULL, &pos);
         insertRenderBuffer(goi, "go_2");
@@ -343,8 +365,34 @@ void Game::render_background() {
             };
             SDL_RenderCopy(renderer, background, NULL, &bg_pos);
             if (tweens->get_tween("bg_fade_black") != nullptr) {
-                std::cout << tweens->get_tween("bg_fade_black")->value() << std::endl;
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, tweens->get_tween("bg_fade_black")->value());
+                bg_pos.x = 0;
+                bg_pos.y = 0;
+                bg_pos.w = WINDOW_WIDTH;
+                bg_pos.h = WINDOW_HEIGHT;
+                SDL_RenderFillRect(renderer, &bg_pos);
+            }
+            break;
+        }
+        case GME_STE_GAMEOVER: {
+            if (tweens->get_tween("gameover_bg") != nullptr) {
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, tweens->get_tween("gameover_bg")->value());
+                bg_pos.x = 0;
+                bg_pos.y = 0;
+                bg_pos.w = WINDOW_WIDTH;
+                bg_pos.h = WINDOW_HEIGHT;
+                SDL_RenderFillRect(renderer, &bg_pos);
+                if (tweens->get_tween("gameover_bg")->isComplete()) {
+                    TweenObject* tween = new TweenObject();
+                    tween->add(0, 1, 50, IN);
+                    ui->get_tweens()->add_tween("gameover_text", tween);
+                }
+            }
+            else {
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
                 bg_pos.x = 0;
                 bg_pos.y = 0;
                 bg_pos.w = WINDOW_WIDTH;

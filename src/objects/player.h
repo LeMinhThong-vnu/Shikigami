@@ -12,6 +12,7 @@ class Player : public GameObject {
         friend class UI;
         friend class Shikigami;
         friend class Game;
+        friend class Baby;
         
         Player(int _x, int _y, Game* _game);
         ~Player();
@@ -28,7 +29,11 @@ class Player : public GameObject {
 
         void update_summon();
 
+        void update_gameover();
+
         InputComponent* getInput() const { return input; };
+
+        void set_state(PLAYER_STATES _state) { state = _state; };
 
     private:
 

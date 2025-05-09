@@ -49,9 +49,25 @@ void Player::update() {
         case PLR_STE_SUMMON:
             update_summon();
             break;
+        case PLR_STE_GAMEOVER:
+            update_gameover();
+            break;
     }
 
     GameObject::update();
+}
+
+void Player::update_gameover() {
+    if (sprite->isComplete()) {
+        sprite->setAnim("knockdown");
+    }
+    if (tweens->get_tween("gameover_x") != nullptr) {
+        body->setPos(
+            tweens->get_tween("gameover_x")->value(),
+            tweens->get_tween("gameover_y")->value(),
+            0
+        );
+    }
 }
 
 void Player::update_idle() {
@@ -297,6 +313,7 @@ void Player::update_grab() {
             spirit_count = std::min(spirit_count + (dynamic_cast<Shikigami*>(grabbing)->get_cost() / 2), spirit_count_max);
             if (spirit_count == spirit_count_max) spirit_cooldown = 0;
             grabbing->setRemove(true);
+            grabbing = nullptr;
         }
     }
 

@@ -12,6 +12,7 @@
 class Game {
     public:
         friend class UI;
+        friend class Baby;
 
         Game();
         ~Game();
@@ -88,6 +89,10 @@ class Game {
 
         void set_state(GAME_STATES _state) { state = _state; }
 
+        TweenComponent* get_tweens() { return tweens; }
+
+        void add_score(int n) { score += n; }
+
     private:
         static std::vector<GameObject*> objects;
         std::map<std::string, std::vector<GameObject*>> layers = {};
@@ -103,6 +108,7 @@ class Game {
         std::vector<GameObject*> obj_buffer = {};
         UI* ui = nullptr;
         GAME_STATES state = GAME_STATES::GME_STE_TITLE;
+        int score = 0;
         
         bool tutorial_summon_flag = false;
         bool tutorial_throw_flag = false;

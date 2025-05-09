@@ -9,6 +9,7 @@ Fox::Fox(int _x, int _y, Game* _game) : Shikigami(_x, _y, SHIKIGAMI_TYPES::FOX, 
     life = 3;
     cooldown = cooldown_max;
     cost = 1;
+    sfx = Mix_LoadWAV("assets/audio/shiki_fox.mp3");
 }
 
 Fox::~Fox() {
@@ -89,6 +90,7 @@ void Fox::attack() {
     body->setPosZ(-1);
     body->setApplyingCollision(false);
     state = SHK_STE_ATTACK;
+    Mix_PlayChannel(-1, sfx, 0);
 }
 
 void Fox::update_attack() {

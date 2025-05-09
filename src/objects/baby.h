@@ -16,6 +16,14 @@ class Baby : public GameObject {
 
         void damage(int dmg);
 
+        int get_hp() { return hp; }
+
+        int get_hp_max() { return hp_max; }
+
+        void reset() {
+            hp = hp_max;
+        }
+
     private:
         int hp = 200;
         int hp_max = 200;

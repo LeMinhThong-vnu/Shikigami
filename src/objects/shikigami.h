@@ -2,6 +2,7 @@
 #define SHIKIGAMI_H
 
 #include "../util/class_def.h"
+#include <SDL_mixer.h>
 #include "game_object.h"
 
 class Shikigami : public GameObject {
@@ -46,6 +47,7 @@ class Shikigami : public GameObject {
         int cooldown_max = 50;
         int cost = 1;
         Enemy* target = nullptr;
+        Mix_Chunk* sfx = nullptr;
 };
 
 #endif

@@ -9,6 +9,8 @@ Shikigami::Shikigami(int _x, int _y, SHIKIGAMI_TYPES _type, Game* _game) : GameO
 }
 
 Shikigami::~Shikigami() {
+    Mix_FreeChunk(sfx);
+    sfx = nullptr;
     game->getPlayer()->summons.erase(this);
 }
 
